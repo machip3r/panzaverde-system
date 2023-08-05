@@ -1,7 +1,8 @@
 <template>
-  <HelloWorld />
+  <Nav />
+  <h1>Heyy</h1>
 </template>
 
 <script setup>
-import HelloWorld from "@/components/HelloWorld.vue";
+import Nav from "@/components/Nav.vue";
 </script>
