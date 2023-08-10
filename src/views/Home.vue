@@ -1,6 +1,6 @@
 <template>
   <Nav />
-  <h1>Heyy</h1>
+  <h1>Panza Verde</h1>
 </template>
 
 <script setup>

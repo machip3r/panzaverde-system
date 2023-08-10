@@ -3,7 +3,11 @@
   <nav class="navbar navbar-expand navbar-dark bg-dark">
     <div class="navbar-nav">
       <RouterLink to="/" class="nav-item nav-link">Home</RouterLink>
-      <RouterLink to="/users" class="nav-item nav-link">Users</RouterLink>
+      <RouterLink to="/food" class="nav-item nav-link">Comidas</RouterLink>
+      <RouterLink to="/inventory" class="nav-item nav-link"
+        >Inventario</RouterLink
+      >
+      <RouterLink to="/user" class="nav-item nav-link">Usuarios</RouterLink>
       <button class="btn btn-link nav-item nav-link">Logout</button>
       <!-- <button
         @click="authStore.logout()"
