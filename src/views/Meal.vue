@@ -854,8 +854,6 @@ export default {
           meal[ this.removeAccents(plan.d_name.toLowerCase()) + plan.t_name.toLowerCase() + plan.mt_name.toLowerCase() ] = plan.p_quantity;
       }
 
-      console.log(dataMeals);
-
       this.meals = dataMeals;
     },
 
