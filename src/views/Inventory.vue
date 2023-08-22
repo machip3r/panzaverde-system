@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <h1>Panza Verde</h1>
+  <h1>Inventario</h1>
 </template>
 
 <script></script>

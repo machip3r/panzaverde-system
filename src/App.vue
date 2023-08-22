@@ -1,4 +1,5 @@
 <template>
+  <Nav />
   <router-view />
 </template>
 
@@ -7,5 +8,5 @@
 </style>
 
 <script setup>
-//
+import { Nav } from "@/components";
 </script>
