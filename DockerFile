@@ -1,14 +1,19 @@
-# Use the official Node.js image as the base image
 FROM node:18
 
-# Set the working directory in the container
-WORKDIR /panzaverde-system
+# Create app directory
+WORKDIR src/
 
-# Copy the application files into the working directory
-COPY . /panzaverde-system
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
-# Install the application dependencies
 RUN npm install
+# If you are building your code for production
+# RUN npm ci --omit=dev
 
-# Define the entry point for the container
-CMD ["npm", "start"]
+# Bundle app source
+COPY . .
+
+EXPOSE 8080
+CMD [ "npm", "start" ]
