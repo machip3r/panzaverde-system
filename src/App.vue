@@ -1,6 +1,10 @@
 <template>
-  <Nav />
-  <router-view />
+  <v-layout>
+    <Nav />
+    <v-main>
+      <router-view />
+    </v-main>
+  </v-layout>
 </template>
 
 <style lang="css">
