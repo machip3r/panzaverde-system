@@ -450,13 +450,13 @@ import { VDataTable } from "vuetify/labs/VDataTable";
             <v-divider></v-divider>
             <v-card-actions>
               <v-btn v-if="step > 1" variant="text" @click="goBackPlan()">
-                Back
+                Atras
               </v-btn>
               <v-spacer></v-spacer>
               <v-btn
                 v-if="step < 6 && (mondayCheck || tuesdayCheck || wednesdayCheck || thursdayCheck || fridayCheck) && step != activeDays[activeDays.length - 1]"
                 color="primary" variant="flat" @click="goNextPlan()">
-                Next
+                Siguiente
               </v-btn>
               <v-btn v-if="step == activeDays[activeDays.length - 1]" color="primary" variant="flat"
                 @click="executePlanQueries()">
