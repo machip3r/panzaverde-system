@@ -5,7 +5,6 @@ import { Home, Meal, Inventory, User } from "@/views";
 
 const router = createRouter({
   history: createWebHistory(),
-  linkActiveClass: "active",
   routes: [
     {
       path: "/",
@@ -17,14 +16,14 @@ const router = createRouter({
           path: "/meal",
           component: Meal,
         },
-        /* {
+        {
           path: "/inventory",
           component: Inventory,
         },
         {
           path: "/user",
           component: User,
-        }, */
+        },
       ],
     },
     /* { path: "/:pathMatch(.*)*", redirect: "/home" }, */
