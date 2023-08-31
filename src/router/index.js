@@ -14,7 +14,7 @@ const router = createRouter({
     /* children: [ */
     /* { path: "/home", component: Home, }, */
     {
-      path: "/",
+      path: "/home",
       component: Home,
     },
     {
@@ -29,6 +29,7 @@ const router = createRouter({
       path: "/user",
       component: User,
     },
+    { path: "/:pathMatch(.*)*", redirect: "/home" },
   ],
   /* }, */
   /* { path: "/:pathMatch(.*)*", redirect: "/home" }, */
