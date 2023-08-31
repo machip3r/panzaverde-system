@@ -4,13 +4,13 @@ import { Default } from "@/layouts/default";
 import { Home, Meal, Inventory, User } from "@/views";
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  linkActiveClass: "active",
+  history: createWebHistory(),
+  /* linkActiveClass: "active", */
   routes: [
     {
       path: "/",
-      component: () => Default,
-      redirect: "/home",
+      component: () => Home,
+      /* redirect: "/home",
       children: [
         { path: "/home", component: Home },
         {
@@ -25,9 +25,9 @@ const router = createRouter({
           path: "/user",
           component: User,
         },
-      ],
+      ], */
     },
-    { path: "/:pathMatch(.*)*", redirect: "/home" },
+    /* { path: "/:pathMatch(.*)*", redirect: "/home" }, */
   ],
 });
 
