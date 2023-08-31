@@ -854,6 +854,8 @@ export default {
           meal[ this.removeAccents(plan.d_name.toLowerCase()) + plan.t_name.toLowerCase() + plan.mt_name.toLowerCase() ] = plan.p_quantity;
       }
 
+      console.log(dataMeals);
+
       this.meals = dataMeals;
     },
 
@@ -991,48 +993,48 @@ export default {
     async executePlanQueries() {
       switch (this.step) {
         case 2:
-          if (this.LDN != 0) this.planToAdd[ "LDN" ] = this.LDN;
-          if (this.LDK != 0) this.planToAdd[ "LDK" ] = this.LDK;
-          if (this.LDE != 0) this.planToAdd[ "LDE" ] = this.LDE;
-          if (this.LCN != 0) this.planToAdd[ "LCN" ] = this.LCN;
-          if (this.LCK != 0) this.planToAdd[ "LCK" ] = this.LCK;
-          if (this.LCE != 0) this.planToAdd[ "LCE" ] = this.LCE;
-          if (this.LCNN != 0) this.planToAdd[ "LCNN" ] = this.LCNN;
-          if (this.LCNK != 0) this.planToAdd[ "LCNK" ] = this.LCNK;
-          if (this.LCNE != 0) this.planToAdd[ "LCNE" ] = this.LCNE;
+          if (this.LDN > 0) this.planToAdd[ "LDN" ] = this.LDN;
+          if (this.LDK > 0) this.planToAdd[ "LDK" ] = this.LDK;
+          if (this.LDE > 0) this.planToAdd[ "LDE" ] = this.LDE;
+          if (this.LCN > 0) this.planToAdd[ "LCN" ] = this.LCN;
+          if (this.LCK > 0) this.planToAdd[ "LCK" ] = this.LCK;
+          if (this.LCE > 0) this.planToAdd[ "LCE" ] = this.LCE;
+          if (this.LCNN > 0) this.planToAdd[ "LCNN" ] = this.LCNN;
+          if (this.LCNK > 0) this.planToAdd[ "LCNK" ] = this.LCNK;
+          if (this.LCNE > 0) this.planToAdd[ "LCNE" ] = this.LCNE;
           break;
         case 3:
-          if (this.MDN != 0) this.planToAdd[ "MDN" ] = this.MDN;
-          if (this.MDK != 0) this.planToAdd[ "MDK" ] = this.MDK;
-          if (this.MDE != 0) this.planToAdd[ "MDE" ] = this.MDE;
-          if (this.MCN != 0) this.planToAdd[ "MCN" ] = this.MCN;
-          if (this.MCK != 0) this.planToAdd[ "MCK" ] = this.MCK;
-          if (this.MCE != 0) this.planToAdd[ "MCE" ] = this.MCE;
-          if (this.MCNN != 0) this.planToAdd[ "MCNN" ] = this.MCNN;
-          if (this.MCNK != 0) this.planToAdd[ "MCNK" ] = this.MCNK;
-          if (this.MCNE != 0) this.planToAdd[ "MCNE" ] = this.MCNE;
+          if (this.MDN > 0) this.planToAdd[ "MDN" ] = this.MDN;
+          if (this.MDK > 0) this.planToAdd[ "MDK" ] = this.MDK;
+          if (this.MDE > 0) this.planToAdd[ "MDE" ] = this.MDE;
+          if (this.MCN > 0) this.planToAdd[ "MCN" ] = this.MCN;
+          if (this.MCK > 0) this.planToAdd[ "MCK" ] = this.MCK;
+          if (this.MCE > 0) this.planToAdd[ "MCE" ] = this.MCE;
+          if (this.MCNN > 0) this.planToAdd[ "MCNN" ] = this.MCNN;
+          if (this.MCNK > 0) this.planToAdd[ "MCNK" ] = this.MCNK;
+          if (this.MCNE > 0) this.planToAdd[ "MCNE" ] = this.MCNE;
           break;
         case 4:
-          if (this.MiDN != 0) this.planToAdd[ "MiDN" ] = this.MiDN;
-          if (this.MiDK != 0) this.planToAdd[ "MiDK" ] = this.MiDK;
-          if (this.MiDE != 0) this.planToAdd[ "MiDE" ] = this.MiDE;
-          if (this.MiCN != 0) this.planToAdd[ "MiCN" ] = this.MiCN;
-          if (this.MiCK != 0) this.planToAdd[ "MiCK" ] = this.MiCK;
-          if (this.MiCE != 0) this.planToAdd[ "MiCE" ] = this.MiCE;
-          if (this.MiCNN != 0) this.planToAdd[ "MiCNN" ] = this.MiCNN;
-          if (this.MiCNK != 0) this.planToAdd[ "MiCNK" ] = this.MiCNK;
-          if (this.MiCNE != 0) this.planToAdd[ "MiCNE" ] = this.MiCNE;
+          if (this.MiDN > 0) this.planToAdd[ "MiDN" ] = this.MiDN;
+          if (this.MiDK > 0) this.planToAdd[ "MiDK" ] = this.MiDK;
+          if (this.MiDE > 0) this.planToAdd[ "MiDE" ] = this.MiDE;
+          if (this.MiCN > 0) this.planToAdd[ "MiCN" ] = this.MiCN;
+          if (this.MiCK > 0) this.planToAdd[ "MiCK" ] = this.MiCK;
+          if (this.MiCE > 0) this.planToAdd[ "MiCE" ] = this.MiCE;
+          if (this.MiCNN > 0) this.planToAdd[ "MiCNN" ] = this.MiCNN;
+          if (this.MiCNK > 0) this.planToAdd[ "MiCNK" ] = this.MiCNK;
+          if (this.MiCNE > 0) this.planToAdd[ "MiCNE" ] = this.MiCNE;
           break;
         case 5:
-          if (this.JDN != 0) this.planToAdd[ "JDN" ] = this.JDN;
-          if (this.JDK != 0) this.planToAdd[ "JDK" ] = this.JDK;
-          if (this.JDE != 0) this.planToAdd[ "JDE" ] = this.JDE;
-          if (this.JCN != 0) this.planToAdd[ "JCN" ] = this.JCN;
-          if (this.JCK != 0) this.planToAdd[ "JCK" ] = this.JCK;
-          if (this.JCE != 0) this.planToAdd[ "JCE" ] = this.JCE;
-          if (this.JCNN != 0) this.planToAdd[ "JCNN" ] = this.JCNN;
-          if (this.JCNK != 0) this.planToAdd[ "JCNK" ] = this.JCNK;
-          if (this.JCNE != 0) this.planToAdd[ "JCNE" ] = this.JCNE;
+          if (this.JDN > 0) this.planToAdd[ "JDN" ] = this.JDN;
+          if (this.JDK > 0) this.planToAdd[ "JDK" ] = this.JDK;
+          if (this.JDE > 0) this.planToAdd[ "JDE" ] = this.JDE;
+          if (this.JCN > 0) this.planToAdd[ "JCN" ] = this.JCN;
+          if (this.JCK > 0) this.planToAdd[ "JCK" ] = this.JCK;
+          if (this.JCE > 0) this.planToAdd[ "JCE" ] = this.JCE;
+          if (this.JCNN > 0) this.planToAdd[ "JCNN" ] = this.JCNN;
+          if (this.JCNK > 0) this.planToAdd[ "JCNK" ] = this.JCNK;
+          if (this.JCNE > 0) this.planToAdd[ "JCNE" ] = this.JCNE;
           break;
         case 6:
           if (this.VDN > 0) this.planToAdd[ "VDN" ] = this.VDN;
@@ -1048,7 +1050,7 @@ export default {
       }
 
       for (const plan in this.planToAdd) {
-        if (this.planToAdd[ plan ] != 0) {
+        if (this.planToAdd[ plan ] > 0) {
           const data = {
             id_subscription: this.idSubscription,
             p_quantity: parseInt(this.planToAdd[ plan ])
