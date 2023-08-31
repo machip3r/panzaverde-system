@@ -8,8 +8,9 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      component: () => Default,
-      redirect: "/home",
+      /* component: () => Default, */
+      component: Home,
+      /* redirect: "/home", */
       children: [
         { path: "/home", component: Home, },
         {
