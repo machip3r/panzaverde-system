@@ -5,12 +5,12 @@ import { Home, Meal, Inventory, User } from "@/views";
 
 const router = createRouter({
   history: createWebHistory(),
-  /* linkActiveClass: "active", */
+  linkActiveClass: "active",
   routes: [
     {
       path: "/",
-      component: () => Home,
-      /* redirect: "/home",
+      component: () => Default,
+      redirect: "/home",
       children: [
         { path: "/home", component: Home },
         {
@@ -25,9 +25,9 @@ const router = createRouter({
           path: "/user",
           component: User,
         },
-      ], */
+      ],
     },
-    /* { path: "/:pathMatch(.*)*", redirect: "/home" }, */
+    { path: "/:pathMatch(.*)*", redirect: "/home" },
   ],
 });
 
