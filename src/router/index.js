@@ -5,14 +5,8 @@ import { Home, Meal, Inventory, User } from "@/views";
 
 const router = createRouter({
   history: createWebHistory(),
+  linkActiveClass: "active",
   routes: [
-    /* {
-      path: "/", */
-    /* component: () => Default, */
-    /* component: Home, */
-    /* redirect: "/home", */
-    /* children: [ */
-    /* { path: "/home", component: Home, }, */
     {
       path: "/",
       component: Default,
