@@ -12,22 +12,22 @@ const router = createRouter({
       component: () => Default,
       redirect: "/home",
       children: [
-        { path: "/home", component: Home },
+        { path: "/home", component: Home, },
         {
           path: "/meal",
           component: Meal,
         },
-        {
+        /* {
           path: "/inventory",
           component: Inventory,
         },
         {
           path: "/user",
           component: User,
-        },
+        }, */
       ],
     },
-    { path: "/:pathMatch(.*)*", redirect: "/home" },
+    /* { path: "/:pathMatch(.*)*", redirect: "/home" }, */
   ],
 });
 
