@@ -14,6 +14,11 @@ const router = createRouter({
     /* children: [ */
     /* { path: "/home", component: Home, }, */
     {
+      path: "/",
+      component: Default,
+      redirect: "/home",
+    },
+    {
       path: "/home",
       component: Home,
     },
@@ -29,11 +34,11 @@ const router = createRouter({
       path: "/user",
       component: User,
     },
-    { path: "/:pathMatch(.*)*", redirect: "/home" },
+    {
+      path: "/:pathMatch(.*)*",
+      redirect: "/home",
+    },
   ],
-  /* }, */
-  /* { path: "/:pathMatch(.*)*", redirect: "/home" }, */
-  /* ], */
 });
 
 export default router;
