@@ -1,0 +1,1 @@
+- cuando se ponga fecha inicio, se ponga la fecha final automaticamente
