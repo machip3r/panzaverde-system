@@ -23,7 +23,16 @@
       <v-list density="compact" nav>
         <v-list-item to="/home" title="Home" value="home"></v-list-item>
         <v-list-item to="/meal" title="Comidas" value="meal"></v-list-item>
-        <v-list-item to="/inventory" title="Inventario" value="inventory"></v-list-item>
+        <v-list-item
+          to="/inventory"
+          title="Inventario"
+          value="inventory"
+        ></v-list-item>
+        <v-list-item
+          to="/order"
+          title="Pedidos (temp)"
+          value="order"
+        ></v-list-item>
         <!-- <v-list-item to="/user" title="Usuarios" value="user"></v-list-item> -->
       </v-list>
     </v-navigation-drawer>
