@@ -29,7 +29,6 @@ function getLastOrderDate() {
 
   lastOrderDate.value =
     (day < 10 ? "0" + day : day) + "/" + monthName[month] + "/" + year;
-  console.log(lastOrderDate.value);
 }
 
 function getOrders() {
