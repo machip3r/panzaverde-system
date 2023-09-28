@@ -2,16 +2,15 @@
 import { ref } from "vue";
 import axios from "axios";
 
-const props = defineProps(["product_id"]);
-const product = ref([]);
+const props = defineProps(["product"]);
+const product = ref({});
 
 async function getProduct(id) {
   product.value = (await axios.get(`/products/${id}`)).data[0];
   console.log(product.value);
 }
 
-console.log(props.product_id);
-getProduct(props.product_id);
+getProduct(props.product.id_product);
 </script>
 
 <template>
