@@ -1,6 +1,7 @@
 <!-- TODO: Create single product detail component dialog -->
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useOrderStore } from "@/store/order.clipboard";
 import axios from "axios";
 
 import { VDataTable } from "vuetify/labs/VDataTable";
@@ -8,11 +9,12 @@ import { ProductDetail } from "@/components";
 
 // State variables
 const props = defineProps(["order"]);
-const orderProducts = ref([]);
 const openDialog = ref(false);
 const productDetail = ref({});
 
 // Normal variables
+const order = useOrderStore();
+
 // TODO: Update this so it can have the actual order data
 const headers = [
   {
@@ -37,7 +39,9 @@ const headers = [
 
 // Button actions
 function copyOrder() {
-  console.log("Copy");
+  order.showOrder();
+  order.copyOrder({ hola: "mundo" });
+  order.showOrder();
 }
 
 // General procedures
@@ -48,17 +52,32 @@ function getTotal() {
   );
 }
 
-// API fetching
-async function getProducts(id) {
-  orderProducts.value = (await axios.get("products/")).data;
+function parseTimestamp(timestamp) {
+  if (timestamp === undefined) return;
+
+  timestamp = timestamp.substring(0, 10).split("-");
+  return timestamp[2] + "/" + timestamp[1] + "/" + timestamp[0];
 }
 
-async function openProductDetail(e, data) {
+async function openProductDetail(_, data) {
   productDetail.value = data.item.raw;
   openDialog.value = true;
 }
 
-getProducts();
+// API isFetching
+async function getOrderProducts(id) {
+  axios
+    .get(`orders/${id}/detail`)
+    .then((res) => {
+      orderProducts.value = [...res.data.products];
+      isFetching = false;
+    })
+    .catch();
+
+  console.log("From order detail: ", orderProducts.value);
+}
+
+console.log("Prop: ", props.order);
 </script>
 
 <template>
@@ -69,9 +88,11 @@ getProducts();
       </v-col>
     </v-row>
   </v-dialog>
-  <v-row align="center" justify="center">
+  <v-row justify="center">
     <v-col>
-      <h2 class="mt-5">Último pedido ({{ order.orderDate }})</h2>
+      <h2 class="mt-5">
+        Último pedido ({{ parseTimestamp(props.order.o_date) }})
+      </h2>
       <p>{{ order.user }}</p>
     </v-col>
     <v-col class="text-right">
@@ -84,7 +105,7 @@ getProducts();
 
   <v-data-table
     :headers="headers"
-    :items="orderProducts"
+    :items="props.order.products"
     :items-per-page="5"
     :hover="true"
     @click:row="openProductDetail"
