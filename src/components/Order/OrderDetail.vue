@@ -63,21 +63,6 @@ async function openProductDetail(_, data) {
   productDetail.value = data.item.raw;
   openDialog.value = true;
 }
-
-// API isFetching
-async function getOrderProducts(id) {
-  axios
-    .get(`orders/${id}/detail`)
-    .then((res) => {
-      orderProducts.value = [...res.data.products];
-      isFetching = false;
-    })
-    .catch();
-
-  console.log("From order detail: ", orderProducts.value);
-}
-
-console.log("Prop: ", props.order);
 </script>
 
 <template>

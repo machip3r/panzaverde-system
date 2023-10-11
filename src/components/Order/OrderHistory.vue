@@ -1,5 +1,8 @@
+<!-- TODO: Enable DatePicker on input -->
+<!-- TODO: Toggle default selection on first element of item list -->
+<!-- TODO: Maybe put everything inside a virtual scroll idk -->
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 import axios from "axios";
 
@@ -11,8 +14,6 @@ import { OrderDetail } from "@/components";
 const orders = ref([]);
 let selectedOrder = ref({});
 let date = ref(undefined);
-let isFetching = ref(true);
-let update = ref(0);
 const menu = ref(true);
 
 // Normal variables
@@ -47,9 +48,6 @@ async function getOrders() {
 
 async function getOrderDetails(id) {
   selectedOrder.value = (await axios.get(`orders/${id}/detail`)).data;
-
-  console.log("Selected order: ", selectedOrder.value);
-  update.value++;
 }
 
 function parseTimestamp(timestamp) {
@@ -57,7 +55,6 @@ function parseTimestamp(timestamp) {
   return timestamp[2] + "/" + timestamp[1] + "/" + timestamp[0];
 }
 
-// Component Lifecycle
 getOrders();
 </script>
 

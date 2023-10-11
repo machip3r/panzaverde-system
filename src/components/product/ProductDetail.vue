@@ -6,23 +6,16 @@ import axios from "axios";
 // State variables
 const props = defineProps(["product"]);
 const product = ref({});
+let isFetching = ref(false);
 
 // Normal variables
 
 // General procedures
 async function getProduct(id) {
-  product.value = (await axios.get(`/products/${id}`)).data[0];
-  console.log(product.value);
+  product.value = (await axios.get(`/products/${id}`)).data;
 }
 
-console.log("Hola");
-onMounted(() => {
-  console.log("ProductDetail montado");
-  setTimeout(() => {
-    console.log("holap");
-    getProduct(props.product.id_product);
-  }, 1000);
-});
+getProduct(props.product.id_product);
 </script>
 
 <template>
