@@ -43,7 +43,9 @@ const orderStatusDetail = {
 // General procedures
 // API fetching
 async function getOrders() {
-  orders.value = [...(await axios.get("orders/")).data];
+  let response = await axios.get("orders/");
+  response = response.data.orders;
+  orders.value = [...response];
 
   console.log("[OrderHistory - orders.value]: ", orders.value);
   getOrderDetails(orders.value[0].id_order);

@@ -160,7 +160,7 @@ function confirmDeletionDialog(i) {
       <v-card>
         <v-card-title class="text-h5">Eliminar producto</v-card-title>
         <v-card-text>
-          ¿Seguro que desea eliminar "<i>{{
+          ¿Seguro que desea eliminar AQUI MERO"<i>{{
             clipboard.order.products[deleteId].p_name
           }}</i
           >" de la orden?
