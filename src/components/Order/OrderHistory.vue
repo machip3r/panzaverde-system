@@ -10,6 +10,8 @@ import { VDatePicker } from "vuetify/labs/VDatePicker";
 import { VMenu } from "vuetify/lib/components/index.mjs";
 import { OrderDetail } from "@/components";
 
+import { parseTimestamp } from "@/utils/order.utils";
+
 // State variables
 const orders = ref([]);
 let selectedOrder = ref({});
@@ -41,18 +43,18 @@ const orderStatusDetail = {
 // General procedures
 // API fetching
 async function getOrders() {
-  orders.value = (await axios.get("/orders/")).data;
+  orders.value = [...(await axios.get("orders/")).data];
 
+  console.log("[OrderHistory - orders.value]: ", orders.value);
   getOrderDetails(orders.value[0].id_order);
+  console.log("[OrderHistory selectedOrder.value]: ", orders.value);
 }
 
 async function getOrderDetails(id) {
-  selectedOrder.value = (await axios.get(`orders/${id}/detail`)).data;
-}
-
-function parseTimestamp(timestamp) {
-  timestamp = timestamp.substring(0, 10).split("-");
-  return timestamp[2] + "/" + timestamp[1] + "/" + timestamp[0];
+  Object.assign(
+    selectedOrder.value,
+    (await axios.get(`orders/id/${id}/detail`)).data
+  );
 }
 
 getOrders();

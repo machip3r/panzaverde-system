@@ -2,10 +2,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useOrderStore } from "@/store/order.clipboard";
-import axios from "axios";
 
 import { VDataTable } from "vuetify/labs/VDataTable";
 import { ProductDetail } from "@/components";
+
+import { parseTimestamp } from "@/utils/order.utils";
 
 // State variables
 const props = defineProps(["order"]);
@@ -39,9 +40,7 @@ const headers = [
 
 // Button actions
 function copyOrder() {
-  order.showOrder();
-  order.copyOrder({ hola: "mundo" });
-  order.showOrder();
+  order.copyOrder(props.order);
 }
 
 // General procedures
@@ -50,13 +49,6 @@ function getTotal() {
     (accum, currVal) => accum + currVal.precio,
     0
   );
-}
-
-function parseTimestamp(timestamp) {
-  if (timestamp === undefined) return;
-
-  timestamp = timestamp.substring(0, 10).split("-");
-  return timestamp[2] + "/" + timestamp[1] + "/" + timestamp[0];
 }
 
 async function openProductDetail(_, data) {
