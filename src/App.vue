@@ -63,7 +63,6 @@ function reset() {
   confirmOrder.value = false;
   confirmDeletion.value = false;
   confirmDeletionOrder.value = false;
-  computedTotal.value = false;
   deleteId.value = -1;
   p_name.value = "";
 }
