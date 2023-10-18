@@ -12,7 +12,7 @@ let isFetching = ref(false);
 
 // General procedures
 async function getProduct(id) {
-  product.value = (await axios.get(`/products/${id}`)).data;
+  product.value = (await axios.get(`/products/id/${id}`)).data;
 }
 
 getProduct(props.product.id_product);

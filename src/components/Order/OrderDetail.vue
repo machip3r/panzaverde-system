@@ -34,7 +34,7 @@ const headers = [
     title: "Cantidad",
     align: "start",
     sortable: false,
-    key: "p_stock",
+    key: "op_quantity",
   },
 ];
 
@@ -44,11 +44,8 @@ function copyOrder() {
 }
 
 // General procedures
-function getTotal() {
-  return props.order.products.reduce(
-    (accum, currVal) => accum + currVal.precio,
-    0
-  );
+function getTotal(order) {
+  return order.products.reduce((accum, currVal) => accum + currVal.precio, 0);
 }
 
 async function openProductDetail(_, data) {

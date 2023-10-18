@@ -1,55 +1,71 @@
 <script setup>
 import { ref } from "vue";
-import { useOrderStore } from "./store/order.clipboard";
+
+import axios from "axios";
 
 import { Nav } from "@/components";
 
-import { parseTimestamp } from "./utils/order.utils";
+import { parseTimestamp, getTotal } from "./utils/order.utils";
+import { useOrderStore } from "./store/order.clipboard";
 
-let dialog = ref(true);
-let confirmDeletion = ref(false);
-let deleteId = ref(-1);
-let alert = ref({
-  show: false,
-  closable: true,
-  icon: "mdi-alert",
-  type: "warning",
-  title: "title",
-  text: "text",
-});
 const clipboard = useOrderStore();
 
-function showAlert(closable, icon, type, title, text) {
-  alert.value["show"] = true;
-  alert.value["closable"] = closable;
-  alert.value["icon"] = icon;
-  alert.value["type"] = type;
-  alert.value["title"] = title;
-  alert.value["text"] = text;
-}
+let dialog = ref(true);
+let confirmOrder = ref(false);
+let confirmDeletion = ref(false);
+let confirmDeletionOrder = ref(false);
+let computedTotal = ref(false);
+let deleteId = ref(-1);
+let p_name = ref("");
 
-function openDialog() {
+function openClipboardDialog() {
   dialog.value = true;
-
-  showAlert(
-    true,
-    "mdi-check",
-    "success",
-    "Copiar al portapapeles",
-    "El pedido se ha copiado correctamente"
-  );
 }
 
 function openConfirmDialog(i) {
   confirmDeletion.value = true;
   deleteId.value = i;
+  p_name.value = clipboard.order.products[i].p_name;
 }
 
-function confirmDeletionDialog(i) {
-  console.log("i: ", i);
-  console.log("Product: ", clipboard.order.products[i]);
+function deleteProduct(i) {
   clipboard.deleteProduct(i);
   confirmDeletion.value = false;
+  deleteId.value = -1;
+}
+
+function deleteOrder() {
+  clipboard.deleteOrder();
+  confirmDeletionOrder.value = false;
+}
+
+function decrementProduct(i) {
+  if (!clipboard.decrementProduct(i)) openConfirmDialog(i);
+}
+
+function openOrderSummary() {
+  confirmOrder.value = true;
+
+  computedTotal.value = getTotal(clipboard.order.products);
+}
+
+async function addOrder() {
+  const preparedProducts = clipboard.prepareInsertion();
+  await axios.post("orders/", preparedProducts);
+
+  reset();
+
+  clipboard.deleteOrder();
+}
+
+function reset() {
+  dialog.value = false;
+  confirmOrder.value = false;
+  confirmDeletion.value = false;
+  confirmDeletionOrder.value = false;
+  computedTotal.value = false;
+  deleteId.value = -1;
+  p_name.value = "";
 }
 </script>
 
@@ -72,7 +88,7 @@ function confirmDeletionDialog(i) {
       v-else
       icon="mdi-clipboard-text-outline"
       size="large"
-      @click="openDialog"
+      @click="openClipboardDialog"
     ></v-btn>
 
     <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition">
@@ -82,8 +98,22 @@ function confirmDeletionDialog(i) {
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title>Portapapeles de pedidos</v-toolbar-title>
-          <v-btn icon dark @click="clipboard.deleteOrder">
+          <v-btn v-if="!clipboard.empty()" icon dark @click="openOrderSummary">
+            <v-icon>mdi-check</v-icon>
+            <v-tooltip activator="parent" location="bottom">
+              Confirmar la orden
+            </v-tooltip>
+          </v-btn>
+          <v-btn
+            v-if="!clipboard.empty()"
+            icon
+            dark
+            @click="confirmDeletionOrder = true"
+          >
             <v-icon>mdi-delete</v-icon>
+            <v-tooltip activator="parent" location="bottom">
+              Borrar portapapeles
+            </v-tooltip>
           </v-btn>
         </v-toolbar>
         <v-card-item v-if="!clipboard.empty()">
@@ -126,19 +156,20 @@ function confirmDeletionDialog(i) {
                     </v-row>
                     <v-row align-content="end">
                       <v-col>
-                        <v-btn>
+                        <v-btn @click="decrementProduct(i)">
                           <v-icon>mdi-minus</v-icon>
                         </v-btn>
                       </v-col>
                       <v-col>
                         <v-text-field
                           type="number"
+                          placeholder="Cant."
                           :value="product.op_quantity"
                         >
                         </v-text-field>
                       </v-col>
                       <v-col>
-                        <v-btn>
+                        <v-btn @click="clipboard.incrementProduct(i)">
                           <v-icon>mdi-plus</v-icon>
                         </v-btn>
                       </v-col>
@@ -160,27 +191,70 @@ function confirmDeletionDialog(i) {
       <v-card>
         <v-card-title class="text-h5">Eliminar producto</v-card-title>
         <v-card-text>
-          ¿Seguro que desea eliminar AQUI MERO"<i>{{
-            clipboard.order.products[deleteId].p_name
-          }}</i
+          ¿Seguro que desea eliminar "<i>{{ p_name }}</i
           >" de la orden?
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="confirmDeletion = false">Cancelar</v-btn>
-          <v-btn @click="confirmDeletionDialog(deleteId)">Eliminar</v-btn>
+          <v-btn @click="deleteProduct(deleteId)">Eliminar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <v-alert
-      v-if="alert.show"
-      :icon="alert.icon"
-      :type="alert.type"
-      :title="alert.title"
-      :text="alert.text"
+    <v-dialog v-model="confirmDeletionOrder" persistent width="auto">
+      <v-card>
+        <v-card-title class="text-h5">Vaciar portapapeles</v-card-title>
+        <v-card-text>
+          ¿Seguro que desea eliminar la orden del portapapeles?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="confirmDeletionOrder = false">Cancelar</v-btn>
+          <v-btn @click="deleteOrder()">Eliminar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
+      v-model="confirmOrder"
+      persistent
+      min-width="10%"
+      max-width="600px"
+      max-height="500px"
     >
-    </v-alert>
+      <v-card>
+        <v-card-item>
+          <v-card-title class="text-h5">Confirmar pedido</v-card-title>
+          <v-card-subtitle> Resumen del pedido: </v-card-subtitle>
+        </v-card-item>
+        <v-card-item>
+          <v-virtual-scroll
+            :items="clipboard.order.products"
+            height="200px"
+            max-height="500px"
+          >
+            <template v-slot:default="{ item }">
+              <v-list-item
+                :title="item.p_name"
+                :subtitle="`Cantidad: ${item.op_quantity}`"
+              >
+                <template v-slot:append>
+                  Precio: ${{ parseFloat(item.p_price).toFixed(2) }}
+                </template>
+              </v-list-item>
+            </template>
+          </v-virtual-scroll>
+        </v-card-item>
+        <v-card-text> Total: ${{ computedTotal.toFixed(2) }} </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="confirmOrder = false">Cancelar</v-btn>
+          <v-btn @click="addOrder()">Confirmar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 

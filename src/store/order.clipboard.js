@@ -21,9 +21,9 @@ export const useOrderStore = defineStore("orderClipboard", {
     },
 
     deleteOrder() {
-      if (!this.empty()) {
-        console.log("Erasing copied order");
-      } else console.log("Empty clipboard");
+      if (this.empty()) return;
+
+      for (let key in this.order) delete this.order[key];
     },
 
     equals(thisOrder, order) {
@@ -61,6 +61,33 @@ export const useOrderStore = defineStore("orderClipboard", {
       return (
         Object.keys(this.order).length === 0 || this.order.products.length <= 0
       );
+    },
+
+    incrementProduct(i) {
+      ++this.order.products[i].op_quantity;
+
+      return true;
+    },
+
+    decrementProduct(i) {
+      if (this.order.products[i].op_quantity - 1 < 1) return false;
+
+      --this.order.products[i].op_quantity;
+      return true;
+    },
+
+    productsLength() {
+      return this.order.products.length;
+    },
+
+    prepareInsertion() {
+      return this.order.products.map((product) => {
+        return {
+          id_product: product.id_product,
+          op_quantity: product.op_quantity,
+          p_price: parseFloat(product.p_price),
+        };
+      });
     },
   },
 });
