@@ -88,138 +88,7 @@ import { AddClientDialogContent, AddRouteDialogContent, AddSubscriptionDialogCon
         </tr>
       </template>
     </v-data-table>
-
-    <!-- <template v-slot:item="{ props, expand, isExpanded }">
-        <tr>
-          <td class="d-block d-sm-table-cell" v-for="field in Object.keys(props.item.raw)">
-            {{ field }}
-          </td>
-          <td>
-            <v-btn icon @click="expand(!isExpanded)">
-              <v-icon>{{ isExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </template> -->
-    <!-- <template v-slot:expanded-item="{ headers, item }">
-        <tr v-for="(item, index) in meals" :key="index" :colspan="headers.length">
-          <td v-for="(i, index) in Object.values(item)">{{ i }}</td>
-        </tr>
-      </template> -->
-
-    <!-- <template v-slot:expanded-row="props">
-        <thead>
-          <tr>
-            <td v-for="(header) of Object.keys(props.item.columns)">{{ header }}</td>
-          </tr>
-        </thead>
-        <tr>
-          <td v-for="(attr) in props.item.raw">{{ props.item.raw[attr] }}</td>
-        </tr> -->
-    <!-- <tr>
-          <td>{{ props.item.raw.lunesdesayunonormal }}</td>
-          <td>{{ props.item.raw.lunesdesayunoespecial }}</td>
-          <td>{{ props.item.raw.lunesdesayunoketo }}</td>
-          <td>{{ props.item.raw.lunescomidanormal }}</td>
-          <td>{{ props.item.raw.lunescomidaespecial }}</td>
-          <td>{{ props.item.raw.lunescomidaketo }}</td>
-          <td>{{ props.item.raw.lunescenanormal }}</td>
-          <td>{{ props.item.raw.lunescenaespecial }}</td>
-          <td>{{ props.item.raw.lunescenaketo }}</td>
-          <td>{{ props.item.raw.martesdesayunonormal }}</td>
-          <td>{{ props.item.raw.martesdesayunoespecial }}</td>
-          <td>{{ props.item.raw.martesdesayunoketo }}</td>
-          <td>{{ props.item.raw.martescomidanormal }}</td>
-          <td>{{ props.item.raw.martescomidaespecial }}</td>
-          <td>{{ props.item.raw.martescomidaketo }}</td>
-          <td>{{ props.item.raw.martescenanormal }}</td>
-          <td>{{ props.item.raw.martescenaespecial }}</td>
-          <td>{{ props.item.raw.martescenaketo }}</td>
-          <td>{{ props.item.raw.miercolesdesayunonormal }}</td>
-          <td>{{ props.item.raw.miercolesdesayunoespecial }}</td>
-          <td>{{ props.item.raw.miercolesdesayunoketo }}</td>
-          <td>{{ props.item.raw.miercolescomidanormal }}</td>
-          <td>{{ props.item.raw.miercolescomidaespecial }}</td>
-          <td>{{ props.item.raw.miercolescomidaketo }}</td>
-          <td>{{ props.item.raw.miercolescenanormal }}</td>
-          <td>{{ props.item.raw.miercolescenaespecial }}</td>
-          <td>{{ props.item.raw.miercolescenaketo }}</td>
-          <td>{{ props.item.raw.juevesdesayunonormal }}</td>
-          <td>{{ props.item.raw.juevesdesayunoespecial }}</td>
-          <td>{{ props.item.raw.juevesdesayunoketo }}</td>
-          <td>{{ props.item.raw.juevescomidanormal }}</td>
-          <td>{{ props.item.raw.juevescomidaespecial }}</td>
-          <td>{{ props.item.raw.juevescomidaketo }}</td>
-          <td>{{ props.item.raw.juevescenanormal }}</td>
-          <td>{{ props.item.raw.juevescenaespecial }}</td>
-          <td>{{ props.item.raw.juevescenaketo }}</td>
-          <td>{{ props.item.raw.viernesdesayunonormal }}</td>
-          <td>{{ props.item.raw.viernesdesayunoespecial }}</td>
-          <td>{{ props.item.raw.viernesdesayunoketo }}</td>
-          <td>{{ props.item.raw.viernescomidanormal }}</td>
-          <td>{{ props.item.raw.viernescomidaespecial }}</td>
-          <td>{{ props.item.raw.viernescomidaketo }}</td>
-          <td>{{ props.item.raw.viernescenanormal }}</td>
-          <td>{{ props.item.raw.viernescenaespecial }}</td>
-          <td>{{ props.item.raw.viernescenaketo }}</td>
-        </tr>
-      </template> -->
   </v-card>
-  <!-- <v-card>
-    <v-card-title>
-      <v-text-field v-model="searchClients" label="Buscar clientes" single-line hide-details></v-text-field>
-    </v-card-title>
-    <v-data-table :headers="headersClients" :items="clients" :search="searchClients">
-      <template v-slot:[`item.actions`]="{ item }">
-        <v-row align="center" align-content="center">
-          <v-col cols="3">
-            <v-btn color="secondary" size="large" @click="openAddClientDialog(item)">
-              Editar
-            </v-btn>
-          </v-col>
-          <v-col cols="3">
-            <v-btn color="error" size="large" @click="openRemoveClientDialog(item)">
-              Eliminar
-            </v-btn>
-          </v-col>
-        </v-row>
-      </template>
-    </v-data-table>
-  </v-card>
-  <v-card>
-    <v-data-table :headers="headersRoutes" :items="routes">
-      <template v-slot:[`item.actions`]="{ item }">
-        <v-row align="center" align-content="center">
-          <v-col cols="3">
-            <v-btn color="error" size="large" @click="openRemoveRouteDialog(item)">
-              Eliminar
-            </v-btn>
-          </v-col>
-        </v-row>
-      </template>
-    </v-data-table>
-  </v-card>
-  <v-card>
-    <v-card-title>
-      <v-text-field v-model="searchSubscriptions" label="Buscar suscripciones" single-line hide-details></v-text-field>
-    </v-card-title>
-    <v-data-table :headers="headersSubscriptions" :items="subscriptions" :search="searchSubscriptions">
-      <template v-slot:[`item.actions`]="{ item }">
-        <v-row align="center" align-content="center">
-          <v-col cols="3">
-            <v-btn color="secondary" size="large" @click="openAddSubscriptionDialog(item)">
-              Editar
-            </v-btn>
-          </v-col>
-          <v-col cols="3">
-            <v-btn color="error" size="large" @click="openRemoveSubscriptionDialog(item)">
-              Eliminar
-            </v-btn>
-          </v-col>
-        </v-row>
-      </template>
-    </v-data-table>
-  </v-card> -->
   <!-- <v-card>
     <v-card-title>
       <v-text-field v-model="searchPlans" label="Buscar planes" single-line hide-details></v-text-field>
@@ -310,8 +179,6 @@ export default {
       { key: "s_payment_date", title: "Fecha Pago" },
       { key: "s_payment_type", title: "Tipo de Pago" },
       { key: "actions", title: "Acciones" },
-
-      /* headers meals plan quantity */
     ],
 
     headersMealsPlanQuantity: [
@@ -405,10 +272,6 @@ export default {
   },
 
   methods: {
-    /* setItem(item) {
-      console.log(item);
-    }, */
-
     removeAccents(str) {
       return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     },

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import { Default } from "@/layouts/default";
-import { Home, Meal, Client, Route, Subscription, Inventory, User } from "@/views";
+import { Home, Meal, Client, Route, Subscription, Plan, Inventory, User } from "@/views";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -31,6 +31,10 @@ const router = createRouter({
     {
       path: "/subscription",
       component: Subscription,
+    },
+    {
+      path: "/plan",
+      component: Plan,
     },
     {
       path: "/inventory",
