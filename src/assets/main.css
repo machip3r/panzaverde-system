@@ -1,4 +1,41 @@
+.main-style {
+    margin: 25px 50px;
+}
+
 .dialog-bottom-transition-enter-active,
 .dialog-bottom-transition-leave-active {
     transition: transform .2s ease-in-out;
+}
+
+.v-table--density-default>.v-table__wrapper>table>tbody>tr>th,
+.v-table--density-default>.v-table__wrapper>table>thead>tr>th,
+.v-table--density-default>.v-table__wrapper>table>tfoot>tr>th {
+    background-color: #9BC229 !important;
+    color: white !important;
+}
+
+.table-meal .tr-parent:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, .05);
+}
+
+.table-plan {
+    width: 100%;
+    text-align: center;
+}
+
+.table-plan .day {
+    background-color: #C6E173 !important;
+}
+
+.table-plan .time {
+    background-color: #EEFACA !important;
+}
+
+.table-plan .type {
+    background-color: #EEFACA !important;
+}
+
+.table-quantity {
+    width: 100%;
+    margin: 0 auto;
 }

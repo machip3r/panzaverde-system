@@ -16,8 +16,11 @@
       </v-form>
     </v-card-text>
     <v-card-actions class="justify-end">
-      <v-btn variant="text" @click="closeFunction()">Close</v-btn>
-      <v-btn variant="text" color="primary" @click="addClient()">Agregar</v-btn>
+      <v-btn variant="text" @click="closeFunction()">Cerrar</v-btn>
+      <v-btn variant="text" color="primary"
+        @click="(typeof this.actualClient.raw === 'undefined') ? addClient() : editClient()">
+        {{ (this.actualClient !== null && typeof this.actualClient.raw === 'undefined') ? "Agregar" : "Actualizar" }}
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -28,13 +31,13 @@ export default {
 
   props: {
     closeFunction: Function,
+    actualClient: Object,
   },
 
   data: () => ({
     validClient: true,
 
     idSocialNetwork: null,
-    idClient: null,
     cName: "",
     cPhone: "",
 
@@ -43,6 +46,7 @@ export default {
     cPhoneRules: [],
 
     client: {
+      id_client: 0,
       id_social_network: 0,
       c_name: "",
       c_address: "",
@@ -54,6 +58,7 @@ export default {
 
   created() {
     this.getSocialNetworks();
+    this.checkClient();
   },
 
   methods: {
@@ -63,10 +68,38 @@ export default {
       this.socialNetworks = apiData.data;
     },
 
+    async checkClient() {
+      if (typeof this.actualClient.raw !== "undefined") {
+        //this.client = await this.axios.get("meal/client/" + this.actualClient.raw.id_client);
+        this.client = {
+          id_client: this.actualClient.raw.id_client,
+          id_social_network: this.actualClient.raw.id_social_network,
+          c_name: this.actualClient.raw.c_name,
+          c_address: this.actualClient.raw.c_address,
+          c_phone: this.actualClient.raw.c_phone,
+        };
+      }
+    },
+
     async addClient() {
       await this.axios.post("meal/client/addClient", this.client);
 
       this.client = {
+        id_client: 0,
+        id_social_network: 0,
+        c_name: "",
+        c_address: "",
+        c_phone: "",
+      };
+
+      this.closeFunction();
+    },
+
+    async editClient() {
+      await this.axios.put("meal/client/editClient", this.client);
+
+      this.client = {
+        id_client: 0,
         id_social_network: 0,
         c_name: "",
         c_address: "",

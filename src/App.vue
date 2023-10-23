@@ -1,7 +1,7 @@
 <template>
   <v-layout>
     <Nav />
-    <v-main>
+    <v-main class="main-style">
       <router-view />
     </v-main>
   </v-layout>

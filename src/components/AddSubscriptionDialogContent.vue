@@ -26,8 +26,12 @@
             </v-form>
         </v-card-text>
         <v-card-actions class="justify-end">
-            <v-btn variant="text" @click="closeFunction()">Close</v-btn>
-            <v-btn variant="text" color="primary" @click="addSubscription()">Agregar</v-btn>
+            <v-btn variant="text" @click="closeFunction()">Cerrar</v-btn>
+            <v-btn variant="text" color="primary"
+                @click="(typeof this.actualSubscription.raw === 'undefined') ? addSubscription() : editSubscription()">
+                {{ (this.actualSubscription !== null && typeof this.actualSubscription.raw === 'undefined') ? "Agregar" :
+                    "Actualizar" }}
+            </v-btn>
         </v-card-actions>
     </v-card>
 </template>
@@ -38,12 +42,14 @@ export default {
 
     props: {
         closeFunction: Function,
+        actualSubscription: Object,
     },
 
     data: () => ({
         validSubscription: true,
 
         subscription: {
+            id_subscription: 0,
             id_client: 0,
             id_route: 0,
             s_specification: "",
@@ -67,6 +73,7 @@ export default {
     created() {
         this.getRoutes();
         this.getClients();
+        this.checkSubscription();
     },
 
     watch: {
@@ -88,6 +95,24 @@ export default {
             this.clients = apiData.data;
         },
 
+        async checkSubscription() {
+            if (typeof this.actualSubscription.raw !== "undefined") {
+                let startDateItems = this.actualSubscription.raw.s_start_date.split("/"), finalDateItems = this.actualSubscription.raw.s_final_date.split("/"), paymentDateItems = this.actualSubscription.raw.s_payment_date.split("/"), startDate = startDateItems[ 2 ] + "-" + startDateItems[ 1 ] + "-" + startDateItems[ 0 ], finalDate = finalDateItems[ 2 ] + "-" + finalDateItems[ 1 ] + "-" + finalDateItems[ 0 ], paymentDate = paymentDateItems[ 2 ] + "-" + paymentDateItems[ 1 ] + "-" + paymentDateItems[ 0 ];
+
+                this.subscription = {
+                    id_subscription: this.actualSubscription.raw.id_subscription,
+                    id_client: this.actualSubscription.raw.id_client,
+                    id_route: this.actualSubscription.raw.id_route,
+                    s_specification: this.actualSubscription.raw.s_specification,
+                    s_start_date: startDate,
+                    s_final_date: finalDate,
+                    s_payment_date: paymentDate,
+                    s_payment_type: this.actualSubscription.raw.s_payment_type,
+                    s_total: this.actualSubscription.raw.s_total,
+                };
+            }
+        },
+
         async getAllSubscriptionsByClient(idClient) {
             const apiData = await this.axios.get("meal/subscription/" + idClient);
 
@@ -98,6 +123,7 @@ export default {
             await this.axios.post("meal/subscription/addSubscription", this.subscription);
 
             this.subscription = {
+                id_subscription: 0,
                 id_client: 0,
                 id_route: 0,
                 s_specification: "",
@@ -109,6 +135,24 @@ export default {
             };
 
             this.getAllSubscriptionsByClient(this.subscription.id_client);
+
+            this.closeFunction();
+        },
+
+        async editSubscription() {
+            await this.axios.put("meal/subscription/editSubscription", this.subscription);
+
+            this.subscription = {
+                id_subscription: 0,
+                id_client: 0,
+                id_route: 0,
+                s_specification: "",
+                s_start_date: "",
+                s_final_date: "",
+                s_payment_date: "",
+                s_payment_type: "",
+                s_total: "",
+            };
 
             this.closeFunction();
         },
