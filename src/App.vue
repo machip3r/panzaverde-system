@@ -4,13 +4,14 @@ import { ref } from "vue";
 import axios from "axios";
 
 import { Nav } from "@/components";
+import { FloatingButton } from "@/components";
 
 import { parseTimestamp, getTotal } from "./utils/order.utils";
 import { useOrderStore } from "./store/order.clipboard";
 
 const clipboard = useOrderStore();
 
-let dialog = ref(true);
+let dialog = ref(false);
 let confirmOrder = ref(false);
 let confirmDeletion = ref(false);
 let confirmDeletionOrder = ref(false);
@@ -73,23 +74,13 @@ function reset() {
     <Nav />
     <v-main>
       <router-view />
+      <v-fab-transition v-show="!clipboard.empty()" origin>
+        <FloatingButton
+          icon="mdi-clipboard-text-outline"
+          @click="openClipboardDialog"
+        />
+      </v-fab-transition>
     </v-main>
-    <v-badge v-if="!clipboard.empty()" dot>
-      <v-btn
-        icon="mdi-clipboard-text-outline"
-        size="large"
-        @click="dialog = true"
-      >
-      </v-btn>
-    </v-badge>
-
-    <v-btn
-      v-else
-      icon="mdi-clipboard-text-outline"
-      size="large"
-      @click="openClipboardDialog"
-    ></v-btn>
-
     <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition">
       <v-card>
         <v-toolbar dark>
@@ -163,7 +154,8 @@ function reset() {
                         <v-text-field
                           type="number"
                           placeholder="Cant."
-                          :value="product.op_quantity"
+                          @input="clipboard.setQtty(i, product.op_quantity)"
+                          v-model="product.op_quantity"
                         >
                         </v-text-field>
                       </v-col>

@@ -47,9 +47,11 @@ async function getOrders() {
   response = response.data.orders;
   orders.value = [...response];
 
-  console.log("[OrderHistory - orders.value]: ", orders.value);
-  getOrderDetails(orders.value[0].id_order);
-  console.log("[OrderHistory selectedOrder.value]: ", orders.value);
+  if (orders.value.length > 0) {
+    console.log("[OrderHistory - orders.value]: ", orders.value);
+    getOrderDetails(orders.value[0].id_order);
+    console.log("[OrderHistory selectedOrder.value]: ", orders.value);
+  }
 }
 
 async function getOrderDetails(id) {
@@ -60,10 +62,11 @@ async function getOrderDetails(id) {
 }
 
 getOrders();
+console.log("Hola: ", orders.value.length);
 </script>
 
 <template>
-  <v-row>
+  <v-row v-if="orders.length > 1">
     <v-col>
       <v-row>
         <v-col>
@@ -74,7 +77,7 @@ getOrders();
       <v-row>
         <v-col cols="12">
           <v-menu>
-            <template v-slot:activator="{ props }">
+            <template v-slot:activator="{}">
               <v-text-field
                 v-model="date"
                 label="Selecciona una fecha"
@@ -123,5 +126,8 @@ getOrders();
     <v-col cols="6">
       <OrderDetail :order="selectedOrder"></OrderDetail>
     </v-col>
+  </v-row>
+  <v-row v-else>
+    <h1>¡No hay registro de ordenes!</h1>
   </v-row>
 </template>

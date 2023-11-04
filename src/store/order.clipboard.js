@@ -63,6 +63,13 @@ export const useOrderStore = defineStore("orderClipboard", {
       );
     },
 
+    setQtty(i, qtty) {
+      this.order.products[i].op_quantity =
+        qtty < 1 || qtty === undefined ? 1 : parseInt(qtty);
+
+      console.log("Qtty changed: ", this.order.products[i].op_quantity);
+    },
+
     incrementProduct(i) {
       ++this.order.products[i].op_quantity;
 
