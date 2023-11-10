@@ -9,6 +9,7 @@ import { FloatingButton } from "@/components";
 import { parseTimestamp, getTotal } from "./utils/order.utils";
 import { useOrderStore } from "./store/order.clipboard";
 
+const orderHistory = ref(null);
 const clipboard = useOrderStore();
 
 let dialog = ref(false);
@@ -74,12 +75,11 @@ function reset() {
     <Nav />
     <v-main>
       <router-view />
-      <v-fab-transition v-show="!clipboard.empty()" origin>
-        <FloatingButton
-          icon="mdi-clipboard-text-outline"
-          @click="openClipboardDialog"
-        />
-      </v-fab-transition>
+      <FloatingButton
+        v-show="!clipboard.empty()"
+        icon="mdi-clipboard-text-outline"
+        @click="openClipboardDialog"
+      />
     </v-main>
     <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition">
       <v-card>

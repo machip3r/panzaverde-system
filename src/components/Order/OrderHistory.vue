@@ -47,11 +47,9 @@ async function getOrders() {
   response = response.data.orders;
   orders.value = [...response];
 
-  if (orders.value.length > 0) {
-    console.log("[OrderHistory - orders.value]: ", orders.value);
-    getOrderDetails(orders.value[0].id_order);
-    console.log("[OrderHistory selectedOrder.value]: ", orders.value);
-  }
+  if (orders.value.length > 0) getOrderDetails(orders.value[0].id_order);
+
+  console.log("getOrders executed");
 }
 
 async function getOrderDetails(id) {
@@ -62,7 +60,6 @@ async function getOrderDetails(id) {
 }
 
 getOrders();
-console.log("Hola: ", orders.value.length);
 </script>
 
 <template>
@@ -93,32 +90,28 @@ console.log("Hola: ", orders.value.length);
 
       <v-row>
         <v-col>
-          <v-list density="compact">
-            <v-list-item
-              v-for="(order, i) in orders"
-              :key="i"
-              :value="order"
-              @click="getOrderDetails(order.id_order)"
-              color="primary"
-            >
-              <template v-slot:append>
-                <v-chip
-                  class="ma-2"
-                  :color="orderStatusDetail[order.o_status].color"
-                  :text-color="orderStatusDetail[order.o_status].textColor"
-                  :prepend-icon="orderStatusDetail[order.o_status].icon"
-                >
-                  {{ orderStatusDetail[order.o_status].text }}
-                </v-chip>
-              </template>
-              <v-list-item-title>
-                {{ parseTimestamp(order.o_date) }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                Orden por {{ order.user }}
-              </v-list-item-subtitle>
-            </v-list-item>
-          </v-list>
+          <v-virtual-scroll :items="orders" height="65%" item-height="50px">
+            <template v-slot:default="{ item }">
+              <v-list-item @click="getOrderDetails(item.id_order)">
+                <template v-slot:append>
+                  <v-chip
+                    class="ma-2"
+                    :color="orderStatusDetail[item.o_status].color"
+                    :text-color="orderStatusDetail[item.o_status].textColor"
+                    :prepend-icon="orderStatusDetail[item.o_status].icon"
+                  >
+                    {{ orderStatusDetail[item.o_status].text }}
+                  </v-chip>
+                </template>
+                <v-list-item-title>
+                  {{ parseTimestamp(item.o_date) }}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  Orden por {{ item.user }}
+                </v-list-item-subtitle>
+              </v-list-item>
+            </template>
+          </v-virtual-scroll>
         </v-col>
       </v-row>
     </v-col>

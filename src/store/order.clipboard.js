@@ -9,12 +9,8 @@ export const useOrderStore = defineStore("orderClipboard", {
 
   actions: {
     copyOrder(order) {
-      if (this.equals(this.order, order)) {
-        console.log("Trying to copy same order");
-        return false;
-      }
+      if (this.equals(this.order, order)) return false;
 
-      console.log("Empty clipboard or different order");
       this.order = JSON.parse(JSON.stringify(order));
 
       return true;
@@ -66,8 +62,6 @@ export const useOrderStore = defineStore("orderClipboard", {
     setQtty(i, qtty) {
       this.order.products[i].op_quantity =
         qtty < 1 || qtty === undefined ? 1 : parseInt(qtty);
-
-      console.log("Qtty changed: ", this.order.products[i].op_quantity);
     },
 
     incrementProduct(i) {

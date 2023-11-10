@@ -1,9 +1,5 @@
 <script setup>
-import { ref } from "vue";
 import { OrderHistory } from "@/components";
-
-const lastOrder = ref({});
-const lastOrderDate = ref("00/00/00");
 </script>
 
 <template>
