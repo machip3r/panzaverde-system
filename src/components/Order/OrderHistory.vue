@@ -10,7 +10,7 @@ import { VDatePicker } from "vuetify/labs/VDatePicker";
 import { VMenu } from "vuetify/lib/components/index.mjs";
 import { OrderDetail } from "@/components";
 
-import { parseTimestamp } from "@/utils/order.utils";
+import { parseTimestamp, getScrollHeight } from "@/utils/order.utils";
 
 // State variables
 const orders = ref([]);
@@ -90,7 +90,7 @@ getOrders();
 
       <v-row>
         <v-col>
-          <v-virtual-scroll :items="orders" height="65%" item-height="50px">
+          <v-virtual-scroll :items="orders" :max-height="getScrollHeight(65)">
             <template v-slot:default="{ item }">
               <v-list-item @click="getOrderDetails(item.id_order)">
                 <template v-slot:append>

@@ -12,3 +12,12 @@ export function getTotal(products) {
     0
   );
 }
+
+export function getScrollHeight(percentage = 50) {
+  const windowHeight = window.innerHeight;
+  const size = (percentage * windowHeight) / 100;
+
+  console.log("size: ", size);
+
+  return size;
+}

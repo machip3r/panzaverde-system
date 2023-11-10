@@ -3,41 +3,19 @@ import { ref } from "vue";
 
 import axios from "axios";
 
-let inventory = ref([]);
-const tableHeaders = [
-  {
-    title: "Producto",
-    align: "start",
-    key: "p_name",
-  },
-  {
-    title: "Precio",
-    align: "start",
-    sortable: true,
-    key: "p_price",
-  },
-  {
-    title: "Cant. en Inventario",
-    align: "start",
-    sortable: true,
-    key: "p_stock",
-  },
-];
+import { getScrollHeight } from "@/utils/order.utils";
 
-async function getProducts() {
-  inventory.value = (await axios.get("products/")).data;
+let inventory = ref([]);
+
+async function getProducts(page, elementsPerPage) {
+  inventory.value = (await axios.get(`products/${elementsPerPage}`)).data;
 
   console.log(inventory.value);
 }
 
-function disableButtons() {
-  return (
-    inventory.value.page <= 1 ||
-    inventory.value.page >= inventory.value.max_pages
-  );
-}
+getProducts(0, 50);
 
-getProducts();
+console.log();
 </script>
 
 <template>
@@ -75,7 +53,7 @@ getProducts();
   <v-row>
     <v-virtual-scroll
       :items="inventory.products"
-      height="100%"
+      :max-height="getScrollHeight(60)"
       item-height="50px"
     >
       <template v-slot:default="{ item }">
@@ -83,7 +61,9 @@ getProducts();
           <v-row>
             <v-col>{{ item.p_name }}</v-col>
             <v-col>${{ parseFloat(item.p_price).toFixed(2) }}</v-col>
-            <v-col align-self="center">{{ item.p_stock }}</v-col>
+            <v-col align-self="center"
+              >{{ item.p_stock }} {{ item.p_unit }}</v-col
+            >
           </v-row>
         </v-list-item>
       </template>
@@ -95,7 +75,7 @@ getProducts();
   </v-row>
 
   <v-row align="center" justify="center">
-    <v-col class="d-flex align-center justify-end">
+    <v-col class="px-10 d-flex align-center justify-end">
       <p>Elementos por página:</p>
       <v-text-field
         single-line
@@ -109,31 +89,66 @@ getProducts();
         bg-color="grey-lighten-3"
         v-model="inventory.records"
       ></v-text-field>
-      Página: <b>{{ inventory.page }}</b> de <b>{{ inventory.max_pages }}</b>
-      <v-btn
-        :disabled="inventory.page === 1"
-        flat
-        size="small"
-        icon="mdi-skip-previous"
-      ></v-btn>
-      <v-btn
-        :disabled="inventory.page <= 1"
-        flat
-        size="small"
-        icon="mdi-chevron-left"
-      ></v-btn>
-      <v-btn
-        :disabled="inventory.page >= inventory.max_pages"
-        flat
-        size="small"
-        icon="mdi-chevron-right"
-      ></v-btn>
-      <v-btn
-        :disabled="inventory.page === inventory.max_pages"
-        flat
-        size="small"
-        icon="mdi-skip-next"
-      ></v-btn>
+
+      <div class="d-flex">
+        <p>Página</p>
+        <p class="mx-2">
+          <b>{{ inventory.page }}</b>
+        </p>
+        <p>de</p>
+        <p class="mx-2">
+          <b>{{ inventory.max_pages }}</b>
+        </p>
+      </div>
+
+      <div class="ml-5">
+        <v-btn
+          class="mx-2"
+          :disabled="inventory.page === 1"
+          flat
+          size="small"
+          icon
+        >
+          <v-icon>mdi-skip-previous</v-icon>
+          <v-tooltip activator="parent" location="top">Página 1</v-tooltip>
+        </v-btn>
+        <v-btn
+          class="mx-2"
+          :disabled="inventory.page <= 1"
+          flat
+          size="small"
+          icon
+        >
+          <v-icon>mdi-chevron-left</v-icon>
+          <v-tooltip activator="parent" location="top">
+            Página {{ inventory.page - 1 }}
+          </v-tooltip>
+        </v-btn>
+        <v-btn
+          class="mx-2"
+          :disabled="inventory.page >= inventory.max_pages"
+          flat
+          size="small"
+          icon
+        >
+          <v-icon>mdi-chevron-right</v-icon>
+          <v-tooltip activator="parent" location="top">
+            Página {{ inventory.page + 1 }}
+          </v-tooltip>
+        </v-btn>
+        <v-btn
+          class="mx-2"
+          :disabled="inventory.page === inventory.max_pages"
+          flat
+          size="small"
+          icon
+        >
+          <v-icon>mdi-skip-next</v-icon>
+          <v-tooltip activator="parent" location="top">
+            Avanzar a página {{ inventory.max_pages }}
+          </v-tooltip>
+        </v-btn>
+      </div>
     </v-col>
   </v-row>
 </template>
