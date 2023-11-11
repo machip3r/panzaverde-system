@@ -1,30 +1,95 @@
-<!-- TODO: Solucionar ese pedo de que no se descargan bien los datos, ni se -->
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import axios from "axios";
 
-// State variables
-const props = defineProps(["product"]);
-const product = ref({});
-let isFetching = ref(false);
+import { fieldRules, deepEquals, deepCopy } from "@/utils/order.utils";
 
-// Normal variables
+// State variables
+const props = defineProps({
+  product: Object,
+  readonly: Boolean,
+  text: Object,
+});
+const product = ref({});
+const editable = ref({});
+const disableConfirm = ref(true);
 
 // General procedures
 async function getProduct(id) {
   product.value = (await axios.get(`/products/id/${id}`)).data;
+
+  if (props.readonly) {
+    deepCopy(product.value, editable.value);
+  }
+}
+
+function atInput() {
+  disableConfirm.value = deepEquals(product.value, editable.value);
 }
 
 getProduct(props.product.id_product);
 </script>
 
 <template>
-  <v-card>
+  <v-card v-if="readonly">
+    <v-card-title>{{ text.title }}</v-card-title>
+    <v-card-text>
+      <v-row>
+        <v-col>
+          <v-text-field
+            label="Nombre del editable."
+            v-model="editable.p_name"
+            type="text"
+            @input="atInput"
+            :rules="[fieldRules.required]"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-text-field
+            label="Precio"
+            v-model.number="editable.p_price"
+            type="number"
+            @input="atInput"
+            :rules="[fieldRules.required, fieldRules.boundCheck]"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row> </v-row>
+      <v-row>
+        <v-col>
+          <v-text-field
+            label="Cantidad"
+            v-model.number="editable.p_stock"
+            type="number"
+            @input="atInput"
+            :rules="[fieldRules.required, fieldRules.boundCheck]"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-text-field
+            label="Unidad"
+            v-model="editable.p_unit"
+            type="text"
+            @input="atInput"
+            :rules="[fieldRules.required]"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn @click="confirmDeletionOrder = false">{{ text.cancel }}</v-btn>
+      <v-btn :disabled="disableConfirm" @click="deleteOrder()">{{
+        text.confirm
+      }}</v-btn>
+    </v-card-actions>
+  </v-card>
+
+  <v-card v-else>
     <v-card-title>
       {{ product.p_name }}
       <span class="font-weight-light"> (${{ product.p_price }}) </span>
     </v-card-title>
-    <v-card-subtitle></v-card-subtitle>
     <v-card-text>
       <v-row>
         <v-col>

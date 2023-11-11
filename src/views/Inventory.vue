@@ -3,15 +3,14 @@ import { ref } from "vue";
 
 import axios from "axios";
 
-import { getScrollHeight } from "@/utils/order.utils";
+import { ProductDetail } from "@/components";
 
+import { getScrollHeight, fieldRules } from "@/utils/order.utils";
+
+const productDetailDialog = ref(false);
+const productDetailId = ref({ id_product: 1 });
 let inventory = ref([]);
 let itemsPerPage = ref(10);
-
-const itemRules = {
-  required: (value) => !!value || "No puede estar vacío",
-  boundCheck: (value) => value >= 1 || "Número fuera de rango",
-};
 
 async function getProducts(elementsPerPage, page) {
   inventory.value = (
@@ -21,11 +20,36 @@ async function getProducts(elementsPerPage, page) {
   itemsPerPage.value = inventory.value.n_products;
 }
 
+function openProductDetail(id) {
+  productDetailId.value = { id_product: id };
+  productDetailDialog.value = true;
+}
+
 getProducts(itemsPerPage.value, 0);
 </script>
 
 <template>
-  <h2 class="mt-5">Inventario</h2>
+  <v-dialog v-model="productDetailDialog" min-width="450px" max-width="30%">
+    <v-row>
+      <v-col>
+        <ProductDetail
+          :product="productDetailId"
+          :readonly="true"
+          :text="{
+            title: 'Modificar producto',
+            confirm: 'Confirmar cambios',
+            cancel: 'Cancelar',
+          }"
+        ></ProductDetail>
+      </v-col>
+    </v-row>
+  </v-dialog>
+
+  <v-row>
+    <v-col>
+      <h2 class="mt-5">Inventario</h2>
+    </v-col>
+  </v-row>
 
   <v-text-field
     class="mx-10 my-5"
@@ -44,6 +68,8 @@ getProducts(itemsPerPage.value, 0);
     <v-col>
       <h2>Todos los productos</h2>
     </v-col>
+    <v-spacer></v-spacer>
+    <v-col><v-btn icon="mdi-plus"></v-btn></v-col>
   </v-row>
   <v-row>
     <v-col><b class="text-grey-darken-1">Producto </b></v-col>
@@ -63,7 +89,7 @@ getProducts(itemsPerPage.value, 0);
       item-height="50px"
     >
       <template v-slot:default="{ item }">
-        <v-list-item @click="console.log(item)">
+        <v-list-item @click="openProductDetail(item.id_product)">
           <v-row>
             <v-col>{{ item.p_name }}</v-col>
             <v-col>${{ parseFloat(item.p_price).toFixed(2) }}</v-col>
@@ -93,10 +119,10 @@ getProducts(itemsPerPage.value, 0);
         placeholder="Elementos por página"
         bg-color="grey-lighten-3"
         type="number"
-        :rules="[itemRules.required, itemRules.boundCheck]"
+        :rules="[fieldRules.required, fieldRules.boundCheck]"
         v-model="itemsPerPage"
         @keyup.enter="
-          itemRules.boundCheck(itemsPerPage) === true
+          fieldRules.boundCheck(itemsPerPage) === true
             ? getProducts(itemsPerPage, 0)
             : (itemsPerPage = 1)
         "

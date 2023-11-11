@@ -43,8 +43,8 @@ function copyOrder() {
   order.copyOrder(props.order);
 }
 
-async function openProductDetail(_, data) {
-  productDetail.value = data.item;
+function openProductDetail(_, data) {
+  productDetail.value = { id_product: data.item.id_product };
   openDialog.value = true;
 }
 </script>

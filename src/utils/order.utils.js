@@ -19,3 +19,48 @@ export function getScrollHeight(percentage = 50) {
 
   return size;
 }
+
+function isObj(obj) {
+  return obj != null && typeof obj === "object";
+}
+
+export function deepCopy(source, target) {
+  if (target == source) return false;
+
+  for (const key in source) {
+    if (isObj(source[key])) {
+      target[key] = Array.isArray(source[key]) ? [] : {};
+
+      deepCopy(source[key], target[key]);
+    } else target[key] = source[key];
+  }
+
+  return true;
+}
+
+export function deepEquals(obj1, obj2) {
+  const leftKeys = Object.keys(obj1);
+  const rightKeys = Object.keys(obj2);
+
+  if (leftKeys.length != rightKeys.length) return false;
+
+  for (const key of leftKeys) {
+    const left = obj1[key];
+    const right = obj2[key];
+
+    const areObjects = isObj(left) && isObj(right);
+
+    if (
+      (areObjects && deepEquals(left, right)) ||
+      (!areObjects && left !== right)
+    )
+      return false;
+  }
+
+  return true;
+}
+
+export const fieldRules = {
+  required: (value) => !!value || "Campo requerido",
+  boundCheck: (value) => value >= 1 || "Número fuera de rango",
+};
