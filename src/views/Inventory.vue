@@ -6,17 +6,23 @@ import axios from "axios";
 import { getScrollHeight } from "@/utils/order.utils";
 
 let inventory = ref([]);
-let itemsPerPage = ref(0);
+let itemsPerPage = ref(10);
+
+const itemRules = {
+  required: (value) => !!value || "No puede estar vacío",
+  boundCheck: (value, max) =>
+    (value >= 1 && value <= max) || "Número fuera de rango",
+};
 
 async function getProducts(elementsPerPage, page) {
-  inventory.value = (await axios.get(`products/${elementsPerPage}/${page}`)).data;
+  inventory.value = (
+    await axios.get(`products/${elementsPerPage}/${page}`)
+  ).data;
 
-  console.log(inventory.value);
+  itemsPerPage.value = elementsPerPage;
 }
 
-getProducts(50, 0);
-
-console.log();
+getProducts(itemsPerPage.value, 0);
 </script>
 
 <template>
@@ -43,7 +49,7 @@ console.log();
   <v-row>
     <v-col><b class="text-grey-darken-1">Producto </b></v-col>
     <v-col><b class="text-grey-darken-1">Precio </b></v-col>
-    <v-col><b class="text-grey-darken-1">Cantidad en Stock</b></v-col>
+    <v-col><b class="text-grey-darken-1">Cantidad en Inventario</b></v-col>
   </v-row>
   <v-row>
     <v-col>
@@ -80,16 +86,24 @@ console.log();
       <p>Elementos por página:</p>
       <v-text-field
         single-line
-        hide-details
         flat
         shrink
         class="mx-10 my-5 shink"
         density="compact"
-        variant="solo"
+        variant="outlined"
         placeholder="Elementos por página"
         bg-color="grey-lighten-3"
+        type="number"
+        :rules="[
+          itemRules.required,
+          itemRules.boundCheck(itemsPerPage, inventory.n_pages),
+        ]"
         v-model="itemsPerPage"
-        @keyup.enter="getProducts(itemsPerPage, 0)"
+        @keyup.enter="
+          itemRules.boundCheck(itemsPerPage, inventory.n_pages) === true
+            ? getProducts(itemsPerPage, 0)
+            : (itemsPerPage = 1)
+        "
       ></v-text-field>
 
       <div class="d-flex">
@@ -121,20 +135,20 @@ console.log();
           flat
           size="small"
           icon
-          @click="getProducts(itemsPerPage, inventory.page-1)"
+          @click="getProducts(itemsPerPage, inventory.page - 1)"
         >
           <v-icon>mdi-chevron-left</v-icon>
           <v-tooltip activator="parent" location="top">
-            Página {{ inventory.page  }}
+            Página {{ inventory.page }}
           </v-tooltip>
         </v-btn>
         <v-btn
           class="mx-2"
-          :disabled="inventory.page >= inventory.n_pages-1"
+          :disabled="inventory.page >= inventory.n_pages - 1"
           flat
           size="small"
           icon
-          @click="getProducts(itemsPerPage, inventory.page+1)"
+          @click="getProducts(itemsPerPage, inventory.page + 1)"
         >
           <v-icon>mdi-chevron-right</v-icon>
           <v-tooltip activator="parent" location="top">
@@ -143,11 +157,11 @@ console.log();
         </v-btn>
         <v-btn
           class="mx-2"
-          :disabled="inventory.page === inventory.n_pages-1"
+          :disabled="inventory.page === inventory.n_pages - 1"
           flat
           size="small"
           icon
-          @click="getProducts(itemsPerPage, inventory.n_pages-1)"
+          @click="getProducts(itemsPerPage, inventory.n_pages - 1)"
         >
           <v-icon>mdi-skip-next</v-icon>
           <v-tooltip activator="parent" location="top">
