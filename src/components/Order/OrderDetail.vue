@@ -44,7 +44,7 @@ function copyOrder() {
 }
 
 async function openProductDetail(_, data) {
-  productDetail.value = data.item.raw;
+  productDetail.value = data.item;
   openDialog.value = true;
 }
 </script>
