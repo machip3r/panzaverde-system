@@ -43,11 +43,6 @@ function copyOrder() {
   order.copyOrder(props.order);
 }
 
-// General procedures
-function getTotal(order) {
-  return order.products.reduce((accum, currVal) => accum + currVal.precio, 0);
-}
-
 async function openProductDetail(_, data) {
   productDetail.value = data.item.raw;
   openDialog.value = true;

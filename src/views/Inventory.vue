@@ -10,8 +10,7 @@ let itemsPerPage = ref(10);
 
 const itemRules = {
   required: (value) => !!value || "No puede estar vacío",
-  boundCheck: (value, max) =>
-    (value >= 1 && value <= max) || "Número fuera de rango",
+  boundCheck: (value) => value >= 1 || "Número fuera de rango",
 };
 
 async function getProducts(elementsPerPage, page) {
@@ -19,7 +18,7 @@ async function getProducts(elementsPerPage, page) {
     await axios.get(`products/${elementsPerPage}/${page}`)
   ).data;
 
-  itemsPerPage.value = elementsPerPage;
+  itemsPerPage.value = inventory.value.n_products;
 }
 
 getProducts(itemsPerPage.value, 0);
@@ -82,7 +81,7 @@ getProducts(itemsPerPage.value, 0);
   </v-row>
 
   <v-row align="center" justify="center">
-    <v-col class="px-10 d-flex align-center justify-end">
+    <v-col class="px-10 d-flex align-center justify-center">
       <p>Elementos por página:</p>
       <v-text-field
         single-line
@@ -94,13 +93,10 @@ getProducts(itemsPerPage.value, 0);
         placeholder="Elementos por página"
         bg-color="grey-lighten-3"
         type="number"
-        :rules="[
-          itemRules.required,
-          itemRules.boundCheck(itemsPerPage, inventory.n_pages),
-        ]"
+        :rules="[itemRules.required, itemRules.boundCheck]"
         v-model="itemsPerPage"
         @keyup.enter="
-          itemRules.boundCheck(itemsPerPage, inventory.n_pages) === true
+          itemRules.boundCheck(itemsPerPage) === true
             ? getProducts(itemsPerPage, 0)
             : (itemsPerPage = 1)
         "
