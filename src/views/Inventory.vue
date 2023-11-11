@@ -6,14 +6,15 @@ import axios from "axios";
 import { getScrollHeight } from "@/utils/order.utils";
 
 let inventory = ref([]);
+let itemsPerPage = ref(0);
 
-async function getProducts(page, elementsPerPage) {
-  inventory.value = (await axios.get(`products/${elementsPerPage}`)).data;
+async function getProducts(elementsPerPage, page) {
+  inventory.value = (await axios.get(`products/${elementsPerPage}/${page}`)).data;
 
   console.log(inventory.value);
 }
 
-getProducts(0, 50);
+getProducts(50, 0);
 
 console.log();
 </script>
@@ -87,65 +88,70 @@ console.log();
         variant="solo"
         placeholder="Elementos por página"
         bg-color="grey-lighten-3"
-        v-model="inventory.records"
+        v-model="itemsPerPage"
+        @keyup.enter="getProducts(itemsPerPage, 0)"
       ></v-text-field>
 
       <div class="d-flex">
         <p>Página</p>
         <p class="mx-2">
-          <b>{{ inventory.page }}</b>
+          <b>{{ inventory.page + 1 }}</b>
         </p>
         <p>de</p>
         <p class="mx-2">
-          <b>{{ inventory.max_pages }}</b>
+          <b>{{ inventory.n_pages }}</b>
         </p>
       </div>
 
       <div class="ml-5">
         <v-btn
           class="mx-2"
-          :disabled="inventory.page === 1"
+          :disabled="inventory.page < 1"
           flat
           size="small"
           icon
+          @click="getProducts(itemsPerPage, 0)"
         >
           <v-icon>mdi-skip-previous</v-icon>
           <v-tooltip activator="parent" location="top">Página 1</v-tooltip>
         </v-btn>
         <v-btn
           class="mx-2"
-          :disabled="inventory.page <= 1"
+          :disabled="inventory.page < 1"
           flat
           size="small"
           icon
+          @click="getProducts(itemsPerPage, inventory.page-1)"
         >
           <v-icon>mdi-chevron-left</v-icon>
           <v-tooltip activator="parent" location="top">
-            Página {{ inventory.page - 1 }}
+            Página {{ inventory.page  }}
           </v-tooltip>
         </v-btn>
         <v-btn
           class="mx-2"
-          :disabled="inventory.page >= inventory.max_pages"
+          :disabled="inventory.page >= inventory.n_pages-1"
           flat
           size="small"
           icon
+          @click="getProducts(itemsPerPage, inventory.page+1)"
         >
           <v-icon>mdi-chevron-right</v-icon>
           <v-tooltip activator="parent" location="top">
-            Página {{ inventory.page + 1 }}
+            Página {{ inventory.page + 2 }}
           </v-tooltip>
         </v-btn>
         <v-btn
           class="mx-2"
-          :disabled="inventory.page === inventory.max_pages"
+          :disabled="inventory.page === inventory.n_pages-1"
           flat
           size="small"
           icon
+          @click="getProducts(itemsPerPage, inventory.n_pages-1)"
         >
           <v-icon>mdi-skip-next</v-icon>
           <v-tooltip activator="parent" location="top">
-            Avanzar a página {{ inventory.max_pages }}
+            Avanzar a página {{ inventory.n_pages }}
           </v-tooltip>
         </v-btn>
       </div>
