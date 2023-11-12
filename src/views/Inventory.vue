@@ -29,15 +29,15 @@ getProducts(itemsPerPage.value, 0);
 </script>
 
 <template>
-  <v-dialog v-model="productDetailDialog" min-width="450px" max-width="30%">
+  <v-dialog v-model="productDetailDialog" min-width="600px" max-width="30%">
     <v-row>
       <v-col>
         <ProductDetail
           :product="productDetailId"
-          :readonly="true"
+          :readonly="false"
           :text="{
             title: 'Modificar producto',
-            confirm: 'Confirmar cambios',
+            confirm: 'Aplicar cambios',
             cancel: 'Cancelar',
           }"
         ></ProductDetail>
@@ -71,36 +71,46 @@ getProducts(itemsPerPage.value, 0);
     <v-spacer></v-spacer>
     <v-col><v-btn icon="mdi-plus"></v-btn></v-col>
   </v-row>
-  <v-row>
-    <v-col><b class="text-grey-darken-1">Producto </b></v-col>
-    <v-col><b class="text-grey-darken-1">Precio </b></v-col>
-    <v-col><b class="text-grey-darken-1">Cantidad en Inventario</b></v-col>
-  </v-row>
-  <v-row>
-    <v-col>
-      <hr class="my-0" />
-    </v-col>
-  </v-row>
 
-  <v-row>
-    <v-virtual-scroll
-      :items="inventory.products"
-      :max-height="getScrollHeight(60)"
-      item-height="50px"
-    >
-      <template v-slot:default="{ item }">
-        <v-list-item @click="openProductDetail(item.id_product)">
-          <v-row>
-            <v-col>{{ item.p_name }}</v-col>
-            <v-col>${{ parseFloat(item.p_price).toFixed(2) }}</v-col>
-            <v-col align-self="center"
-              >{{ item.p_stock }} {{ item.p_unit }}</v-col
-            >
-          </v-row>
-        </v-list-item>
-      </template>
-    </v-virtual-scroll>
-  </v-row>
+  <v-container fluid>
+    <v-row>
+      <v-col><b class="text-grey-darken-1">Producto </b></v-col>
+      <v-col><b class="text-grey-darken-1">Precio </b></v-col>
+      <v-col><b class="text-grey-darken-1">Cantidad en Inventario</b></v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <hr class="my-0" />
+      </v-col>
+    </v-row>
+
+    <v-row v-if="inventory">
+      <v-virtual-scroll
+        :items="inventory.products"
+        :max-height="getScrollHeight(60)"
+        item-height="56px"
+      >
+        <template v-slot:default="{ item }">
+          <v-list-item @click="openProductDetail(item.id_product)">
+            <v-row align="center" justify="center">
+              <v-col>{{ item.p_name }}</v-col>
+              <v-col>${{ parseFloat(item.p_price).toFixed(2) }}</v-col>
+              <v-col align-self="center">
+                {{ item.p_stock }} {{ item.p_unit }}
+              </v-col>
+            </v-row>
+          </v-list-item>
+        </template>
+      </v-virtual-scroll>
+    </v-row>
+
+    <v-row v-else align-content="center" justify="center">
+      <v-col cols="12" class="text-center justify-center">
+        <h1 class="mt-10 mb-5">¡No hay productos registrados!</h1>
+        <v-btn class="mb-10 mt-5" color="green">Agregar un producto</v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
 
   <v-row>
     <hr />

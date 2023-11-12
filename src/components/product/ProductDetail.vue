@@ -12,38 +12,203 @@ const props = defineProps({
 });
 const product = ref({});
 const editable = ref({});
-const disableConfirm = ref(true);
+const confirmDialog = ref(false);
+const disablePositiveAction = ref(true);
+const edit = ref(true);
 
 // General procedures
 async function getProduct(id) {
   product.value = (await axios.get(`/products/id/${id}`)).data;
 
-  if (props.readonly) {
+  if (!props.readonly) {
     deepCopy(product.value, editable.value);
   }
 }
 
+async function updateProduct() {
+  const result = (await axios.put(`/products/`, editable.value)).data.message;
+
+  if (result === "Product modified") {
+    confirmDialog.value = false;
+
+    deepCopy(editable.value, product.value);
+  } else {
+    // Mostrar un tipo de alerta
+    console.log("Error al actualizar");
+  }
+}
+
 function atInput() {
-  disableConfirm.value = deepEquals(product.value, editable.value);
+  disablePositiveAction.value = deepEquals(product.value, editable.value);
 }
 
 getProduct(props.product.id_product);
 </script>
 
 <template>
-  <v-card v-if="readonly">
-    <v-card-title>{{ text.title }}</v-card-title>
-    <v-card-text>
+  <v-dialog
+    v-model="confirmDialog"
+    min-width="10%"
+    max-width="600px"
+    max-height="500px"
+  >
+    <v-card>
+      <v-card-item>
+        <v-card-title class="text-h5">Confirmar cambios</v-card-title>
+        <v-card-subtitle>
+          Los cambios realizados se muestran a continuación
+        </v-card-subtitle>
+      </v-card-item>
+      <v-card-item>
+        <v-row>
+          <v-col cols="3">
+            <p>Campo:</p>
+          </v-col>
+          <v-col>
+            <p>De:</p>
+          </v-col>
+          <v-col>
+            <p>A:</p>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="3">
+            <p>
+              <b>Nombre:</b>
+            </p>
+          </v-col>
+          <v-col>
+            <p>
+              {{ product.p_name }}
+            </p>
+          </v-col>
+          <v-col>
+            <p>
+              <b>
+                {{ editable.p_name }}
+              </b>
+              <span
+                v-if="product.p_name === editable.p_name"
+                class="text-caption font-weight-light"
+              >
+                (sin cambios)
+              </span>
+            </p>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="3">
+            <p>
+              <b>Precio:</b>
+            </p>
+          </v-col>
+          <v-col>
+            <p>${{ parseFloat(product.p_price).toFixed(2) }}</p>
+          </v-col>
+          <v-col>
+            <p>
+              <b> ${{ parseFloat(editable.p_price).toFixed(2) }} </b>
+              <span
+                v-if="product.p_price === editable.p_price"
+                class="text-caption font-weight-light"
+              >
+                (sin cambios)
+              </span>
+            </p>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="3">
+            <p>
+              <b>En Inventario:</b>
+            </p>
+          </v-col>
+          <v-col>
+            <p>
+              {{ product.p_stock }}
+            </p>
+          </v-col>
+          <v-col>
+            <p>
+              <b>
+                {{ editable.p_stock }}
+              </b>
+              <span
+                v-if="product.p_stock === editable.p_stock"
+                class="text-caption font-weight-light"
+              >
+                (sin cambios)
+              </span>
+            </p>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="3">
+            <p>
+              <b>Unidad:</b>
+            </p>
+          </v-col>
+          <v-col>
+            <p>
+              {{ product.p_unit }}
+            </p>
+          </v-col>
+          <v-col>
+            <p>
+              <b>
+                {{ editable.p_unit }}
+              </b>
+              <span
+                v-if="product.p_unit === editable.p_unit"
+                class="text-caption font-weight-light"
+              >
+                (sin cambios)
+              </span>
+            </p>
+          </v-col>
+        </v-row>
+      </v-card-item>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn @click="confirmDialog = false">Cancelar</v-btn>
+        <v-btn @click="updateProduct()">Confirmar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-card v-if="!readonly && edit">
+    <v-card-title>
+      <v-row align="center">
+        <v-col>{{ text.title }}</v-col>
+        <v-spacer></v-spacer>
+        <v-col class="align-end">
+          <v-switch
+            color="success"
+            hide-details
+            inset
+            label="Editar"
+            v-model="edit"
+          ></v-switch>
+        </v-col>
+      </v-row>
+    </v-card-title>
+    <v-card-text class="mt-5">
       <v-row>
         <v-col>
           <v-text-field
-            label="Nombre del editable."
+            label="Nombre del producto"
             v-model="editable.p_name"
             type="text"
             @input="atInput"
             :rules="[fieldRules.required]"
           ></v-text-field>
         </v-col>
+      </v-row>
+      <v-row>
         <v-col>
           <v-text-field
             label="Precio"
@@ -53,9 +218,6 @@ getProduct(props.product.id_product);
             :rules="[fieldRules.required, fieldRules.boundCheck]"
           ></v-text-field>
         </v-col>
-      </v-row>
-      <v-row> </v-row>
-      <v-row>
         <v-col>
           <v-text-field
             label="Cantidad"
@@ -78,18 +240,33 @@ getProduct(props.product.id_product);
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn @click="confirmDeletionOrder = false">{{ text.cancel }}</v-btn>
-      <v-btn :disabled="disableConfirm" @click="deleteOrder()">{{
-        text.confirm
-      }}</v-btn>
+      <v-btn @click="confirmDialog">{{ text.cancel }}</v-btn>
+      <v-btn :disabled="disablePositiveAction" @click="confirmDialog = true">
+        {{ text.confirm }}
+      </v-btn>
     </v-card-actions>
   </v-card>
 
   <v-card v-else>
     <v-card-title>
-      {{ product.p_name }}
-      <span class="font-weight-light"> (${{ product.p_price }}) </span>
+      <v-row align="center" justify="center">
+        <v-col>
+          {{ product.p_name }}
+          <span class="font-weight-light"> (${{ product.p_price }}) </span>
+        </v-col>
+        <v-spacer></v-spacer>
+        <v-col v-if="!readonly" align-center>
+          <v-switch
+            color="success"
+            hide-details
+            inset
+            label="Editar"
+            v-model="edit"
+          ></v-switch>
+        </v-col>
+      </v-row>
     </v-card-title>
+
     <v-card-text>
       <v-row>
         <v-col>
