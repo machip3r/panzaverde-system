@@ -19,7 +19,6 @@ const product = ref({});
 const editable = ref({});
 const confirmDialog = ref(false);
 const disableAccept = ref(true);
-const edit = ref(true);
 
 // General procedures
 async function getProduct(id) {
@@ -79,6 +78,79 @@ switch (props.mode) {
 
 <template>
   <v-dialog
+    v-if="mode === 'create'"
+    v-model="confirmDialog"
+    min-width="10%"
+    max-width="600px"
+    max-height="500px"
+  >
+    <v-card>
+      <v-card-item>
+        <v-card-title class="text-h5">Nuevo producto</v-card-title>
+        <v-card-subtitle>
+          Tu producto se muestra a continuación
+        </v-card-subtitle>
+      </v-card-item>
+      <v-card-item>
+        <v-row>
+          <v-col cols="3">
+            <p>
+              <b>Nombre:</b>
+            </p>
+          </v-col>
+          <v-col>
+            <p>
+              {{ editable.p_name }}
+            </p>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="3">
+            <p>
+              <b>Precio:</b>
+            </p>
+          </v-col>
+          <v-col>
+            <p>${{ parseFloat(editable.p_price).toFixed(2) }}</p>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="3">
+            <p>
+              <b>En Inventario:</b>
+            </p>
+          </v-col>
+          <v-col>
+            <p>{{ editable.p_stock }} unidades</p>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="3">
+            <p>
+              <b>Unidad:</b>
+            </p>
+          </v-col>
+          <v-col>
+            <p>
+              {{ editable.p_unit }}
+            </p>
+          </v-col>
+        </v-row>
+      </v-card-item>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn @click="confirmDialog = false">Cancelar</v-btn>
+        <v-btn @click="emit('onAccept', [editable])">Confirmar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-dialog
+    v-else-if="mode === 'update'"
     v-model="confirmDialog"
     min-width="10%"
     max-width="600px"
@@ -273,16 +345,6 @@ switch (props.mode) {
     <v-card-title>
       <v-row align="center">
         <v-col>{{ text.title }}</v-col>
-        <v-spacer></v-spacer>
-        <v-col class="align-end">
-          <v-switch
-            color="success"
-            hide-details
-            inset
-            label="Editar"
-            v-model="edit"
-          ></v-switch>
-        </v-col>
       </v-row>
     </v-card-title>
     <v-card-text class="mt-5">

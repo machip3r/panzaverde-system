@@ -30,14 +30,13 @@ function openProductDetail(id) {
 getProducts(itemsPerPage.value, 0);
 
 function updateProduct(obj) {
-  console.log(obj[0]);
-  const result = axios
+  axios
     .put(`/products/`, obj[0])
     .then((res) => {
       // Mostrar alerta de modificación
       productDetailDialog.value = false;
 
-      getProducts(itemsPerPage.value, 0);
+      getProducts(itemsPerPage.value, inventory.page);
     })
     .catch((err) => {
       // Mostrar alerta de error
@@ -48,7 +47,23 @@ function updateProduct(obj) {
     });
 }
 
-function createProduct(obj) {}
+function createProduct(obj) {
+  axios
+    .post(`/products/`, obj[0])
+    .then((res) => {
+      // Mostrar alerta de modificación
+      createProductDialog.value = false;
+
+      getProducts(itemsPerPage.value, inventory.page);
+    })
+    .catch((err) => {
+      // Mostrar alerta de error
+      console.log(
+        "Error al crear producto: ",
+        err.response.data.message.sqlMessage
+      );
+    });
+}
 </script>
 
 <template>
@@ -61,7 +76,7 @@ function createProduct(obj) {}
         cancel: 'Cancelar',
       }"
       @onCancel="createProductDialog = false"
-      @onAccept="updateProduct"
+      @onAccept="createProduct"
     ></ProductDetail>
   </v-dialog>
 
