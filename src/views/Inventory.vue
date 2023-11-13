@@ -9,6 +9,7 @@ import { getScrollHeight, fieldRules } from "@/utils/order.utils";
 
 const productDetailDialog = ref(false);
 const productDetailId = ref({ id_product: 1 });
+
 let inventory = ref([]);
 let itemsPerPage = ref(10);
 
@@ -27,9 +28,18 @@ function openProductDetail(id) {
 
 getProducts(itemsPerPage.value, 0);
 
-function onUpdate(obj) {
-  productDetailDialog.value = false;
-  console.log("Object from child: ", obj[0]);
+async function onUpdate(obj) {
+  const result = (await axios.put(`/products/`, obj[0])).data.message;
+
+  if (result === "Product modified") {
+    // Mostrar alerta de modificación
+    productDetailDialog.value = false;
+
+    getProducts(itemsPerPage.value, 0);
+  } else {
+    // Mostrar alerta de error
+    console.log("Error al actualizar");
+  }
 }
 </script>
 
@@ -46,6 +56,7 @@ function onUpdate(obj) {
             cancel: 'Cancelar',
           }"
           @onCancel="productDetailDialog = false"
+          @onAccept="onUpdate"
         ></ProductDetail>
       </v-col>
     </v-row>

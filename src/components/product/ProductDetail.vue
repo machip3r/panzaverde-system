@@ -8,15 +8,16 @@ import { fieldRules, deepEquals, deepCopy } from "@/utils/order.utils";
 const props = defineProps({
   product: Object,
   readonly: Boolean,
+  create: Boolean,
   text: Object,
 });
 
-const emit = defineEmits(["onCancel"]);
+const emit = defineEmits(["onCancel", "onAccept"]);
 
 const product = ref({});
 const editable = ref({});
 const confirmDialog = ref(false);
-const disablePositiveAction = ref(true);
+const disableAccept = ref(true);
 const edit = ref(true);
 
 // General procedures
@@ -28,26 +29,8 @@ async function getProduct(id) {
   }
 }
 
-async function updateProduct() {
-  const result = (await axios.put(`/products/`, editable.value)).data.message;
-
-  if (result === "Product modified") {
-    confirmDialog.value = false;
-
-    deepCopy(editable.value, product.value);
-    onCancel();
-  } else {
-    // Mostrar un tipo de alerta
-    console.log("Error al actualizar");
-  }
-}
-
 function atInput() {
-  disablePositiveAction.value = deepEquals(product.value, editable.value);
-}
-
-function onCancel() {
-  emit("onCancel", [editable.value]);
+  disableAccept.value = deepEquals(product.value, editable.value);
 }
 
 getProduct(props.product.id_product);
@@ -183,7 +166,7 @@ getProduct(props.product.id_product);
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn @click="confirmDialog = false">Cancelar</v-btn>
-        <v-btn @click="updateProduct()">Confirmar</v-btn>
+        <v-btn @click="emit('onAccept', [editable])">Confirmar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -195,6 +178,7 @@ getProduct(props.product.id_product);
         <v-spacer></v-spacer>
         <v-col class="align-end">
           <v-switch
+            v-if="!create"
             color="success"
             hide-details
             inset
@@ -248,8 +232,8 @@ getProduct(props.product.id_product);
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn @click="onCancel">{{ text.cancel }}</v-btn>
-      <v-btn :disabled="disablePositiveAction" @click="confirmDialog = true">
+      <v-btn @click="emit('onCancel')">{{ text.cancel }}</v-btn>
+      <v-btn :disabled="disableAccept" @click="confirmDialog = true">
         {{ text.confirm }}
       </v-btn>
     </v-card-actions>
