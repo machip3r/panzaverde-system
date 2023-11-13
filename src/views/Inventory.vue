@@ -28,18 +28,23 @@ function openProductDetail(id) {
 
 getProducts(itemsPerPage.value, 0);
 
-async function onUpdate(obj) {
-  const result = (await axios.put(`/products/`, obj[0])).data.message;
+function onUpdate(obj) {
+  console.log(obj[0]);
+  const result = axios
+    .put(`/products/`, obj[0])
+    .then((res) => {
+      // Mostrar alerta de modificación
+      productDetailDialog.value = false;
 
-  if (result === "Product modified") {
-    // Mostrar alerta de modificación
-    productDetailDialog.value = false;
-
-    getProducts(itemsPerPage.value, 0);
-  } else {
-    // Mostrar alerta de error
-    console.log("Error al actualizar");
-  }
+      getProducts(itemsPerPage.value, 0);
+    })
+    .catch((err) => {
+      // Mostrar alerta de error
+      console.log(
+        "Error al actualizar: ",
+        err.response.data.message.sqlMessage
+      );
+    });
 }
 </script>
 
@@ -86,7 +91,12 @@ async function onUpdate(obj) {
       <h2>Todos los productos</h2>
     </v-col>
     <v-spacer></v-spacer>
-    <v-col><v-btn icon="mdi-plus"></v-btn></v-col>
+    <v-col>
+      <v-btn icon>
+        <v-icon>mdi-plus</v-icon>
+        <v-tooltip activator="parent" location="top">Nuevo producto</v-tooltip>
+      </v-btn>
+    </v-col>
   </v-row>
 
   <v-container fluid>

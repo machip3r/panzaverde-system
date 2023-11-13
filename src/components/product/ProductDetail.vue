@@ -30,7 +30,10 @@ async function getProduct(id) {
 }
 
 function atInput() {
-  disableAccept.value = deepEquals(product.value, editable.value);
+  disableAccept.value =
+    deepEquals(product.value, editable.value) ||
+    editable.value.p_name.length > 80 ||
+    editable.value.p_unit.length > 10;
 }
 
 getProduct(props.product.id_product);
@@ -196,7 +199,7 @@ getProduct(props.product.id_product);
             v-model="editable.p_name"
             type="text"
             @input="atInput"
-            :rules="[fieldRules.required]"
+            :rules="[fieldRules.required, fieldRules.lengthCheckName]"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -225,7 +228,7 @@ getProduct(props.product.id_product);
             v-model="editable.p_unit"
             type="text"
             @input="atInput"
-            :rules="[fieldRules.required]"
+            :rules="[fieldRules.required, fieldRules.lengthCheckUnit]"
           ></v-text-field>
         </v-col>
       </v-row>
