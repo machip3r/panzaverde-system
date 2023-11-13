@@ -10,6 +10,7 @@ const props = defineProps({
   readonly: Boolean,
   create: Boolean,
   text: Object,
+  mode: String,
 });
 
 const emit = defineEmits(["onCancel", "onAccept"]);
@@ -24,19 +25,56 @@ const edit = ref(true);
 async function getProduct(id) {
   product.value = (await axios.get(`/products/id/${id}`)).data;
 
-  if (!props.readonly) {
-    deepCopy(product.value, editable.value);
-  }
+  deepCopy(product.value, editable.value);
 }
 
-function atInput() {
+function atInputUpdate() {
+  const someEmptyField =
+    editable.value.p_name === undefined ||
+    editable.value.p_price === undefined ||
+    editable.value.p_stock === undefined ||
+    editable.value.p_unit === undefined ||
+    editable.value.p_name === "" ||
+    editable.value.p_price < 1 ||
+    editable.value.p_stock < 1 ||
+    editable.value.p_unit === "";
+
   disableAccept.value =
     deepEquals(product.value, editable.value) ||
+    someEmptyField ||
     editable.value.p_name.length > 80 ||
     editable.value.p_unit.length > 10;
 }
 
-getProduct(props.product.id_product);
+function atInputCreate() {
+  const someEmptyField =
+    editable.value.p_name === undefined ||
+    editable.value.p_price === undefined ||
+    editable.value.p_stock === undefined ||
+    editable.value.p_unit === undefined ||
+    editable.value.p_name === "" ||
+    editable.value.p_price < 1 ||
+    editable.value.p_stock < 1 ||
+    editable.value.p_unit === "";
+
+  console.log("SomeEmtpyField: ", someEmptyField);
+
+  disableAccept.value =
+    someEmptyField ||
+    editable.value.p_name.length > 80 ||
+    editable.value.p_unit.length > 10;
+}
+
+switch (props.mode) {
+  case "update":
+  case "read":
+    getProduct(props.product.id_product);
+    break;
+
+  case "create":
+  default:
+    break;
+}
 </script>
 
 <template>
@@ -174,14 +212,70 @@ getProduct(props.product.id_product);
     </v-card>
   </v-dialog>
 
-  <v-card v-if="!readonly && edit">
+  <v-card v-if="mode === 'create'">
+    <v-card-title>
+      <v-row align="center">
+        <v-col>{{ text.title }}</v-col>
+      </v-row>
+    </v-card-title>
+    <v-card-text class="mt-5">
+      <v-row>
+        <v-col>
+          <v-text-field
+            label="Nombre del producto"
+            v-model="editable.p_name"
+            type="text"
+            @input="atInputCreate"
+            :rules="[fieldRules.required, fieldRules.lengthCheckName]"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-text-field
+            label="Precio"
+            v-model.number="editable.p_price"
+            type="number"
+            @input="atInputCreate"
+            :rules="[fieldRules.required, fieldRules.boundCheck]"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-text-field
+            label="Cantidad"
+            v-model.number="editable.p_stock"
+            type="number"
+            @input="atInputCreate"
+            :rules="[fieldRules.required, fieldRules.boundCheck]"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-text-field
+            label="Unidad"
+            v-model="editable.p_unit"
+            type="text"
+            @input="atInputCreate"
+            :rules="[fieldRules.required, fieldRules.lengthCheckUnit]"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn @click="emit('onCancel')">{{ text.cancel }}</v-btn>
+      <v-btn :disabled="disableAccept" @click="confirmDialog = true">
+        {{ text.confirm }}
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+
+  <v-card v-else-if="mode === 'update'">
     <v-card-title>
       <v-row align="center">
         <v-col>{{ text.title }}</v-col>
         <v-spacer></v-spacer>
         <v-col class="align-end">
           <v-switch
-            v-if="!create"
             color="success"
             hide-details
             inset
@@ -198,7 +292,7 @@ getProduct(props.product.id_product);
             label="Nombre del producto"
             v-model="editable.p_name"
             type="text"
-            @input="atInput"
+            @input="atInputUpdate"
             :rules="[fieldRules.required, fieldRules.lengthCheckName]"
           ></v-text-field>
         </v-col>
@@ -209,7 +303,7 @@ getProduct(props.product.id_product);
             label="Precio"
             v-model.number="editable.p_price"
             type="number"
-            @input="atInput"
+            @input="atInputUpdate"
             :rules="[fieldRules.required, fieldRules.boundCheck]"
           ></v-text-field>
         </v-col>
@@ -218,7 +312,7 @@ getProduct(props.product.id_product);
             label="Cantidad"
             v-model.number="editable.p_stock"
             type="number"
-            @input="atInput"
+            @input="atInputUpdate"
             :rules="[fieldRules.required, fieldRules.boundCheck]"
           ></v-text-field>
         </v-col>
@@ -227,7 +321,7 @@ getProduct(props.product.id_product);
             label="Unidad"
             v-model="editable.p_unit"
             type="text"
-            @input="atInput"
+            @input="atInputUpdate"
             :rules="[fieldRules.required, fieldRules.lengthCheckUnit]"
           ></v-text-field>
         </v-col>
@@ -242,22 +336,12 @@ getProduct(props.product.id_product);
     </v-card-actions>
   </v-card>
 
-  <v-card v-else>
+  <v-card v-else-if="mode === 'read'">
     <v-card-title>
       <v-row align="center" justify="center">
         <v-col>
           {{ product.p_name }}
           <span class="font-weight-light"> (${{ product.p_price }}) </span>
-        </v-col>
-        <v-spacer></v-spacer>
-        <v-col v-if="!readonly" align-center>
-          <v-switch
-            color="success"
-            hide-details
-            inset
-            label="Editar"
-            v-model="edit"
-          ></v-switch>
         </v-col>
       </v-row>
     </v-card-title>

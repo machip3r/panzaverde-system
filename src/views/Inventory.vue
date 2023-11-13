@@ -8,6 +8,7 @@ import { ProductDetail } from "@/components";
 import { getScrollHeight, fieldRules } from "@/utils/order.utils";
 
 const productDetailDialog = ref(false);
+const createProductDialog = ref(false);
 const productDetailId = ref({ id_product: 1 });
 
 let inventory = ref([]);
@@ -28,7 +29,7 @@ function openProductDetail(id) {
 
 getProducts(itemsPerPage.value, 0);
 
-function onUpdate(obj) {
+function updateProduct(obj) {
   console.log(obj[0]);
   const result = axios
     .put(`/products/`, obj[0])
@@ -46,25 +47,36 @@ function onUpdate(obj) {
       );
     });
 }
+
+function createProduct(obj) {}
 </script>
 
 <template>
+  <v-dialog v-model="createProductDialog" min-width="600px" max-width="30%">
+    <ProductDetail
+      mode="create"
+      :text="{
+        title: 'Añadir un nuevo producto',
+        confirm: 'Añadir',
+        cancel: 'Cancelar',
+      }"
+      @onCancel="createProductDialog = false"
+      @onAccept="updateProduct"
+    ></ProductDetail>
+  </v-dialog>
+
   <v-dialog v-model="productDetailDialog" min-width="600px" max-width="30%">
-    <v-row>
-      <v-col>
-        <ProductDetail
-          :product="productDetailId"
-          :readonly="false"
-          :text="{
-            title: 'Modificar producto',
-            confirm: 'Aplicar cambios',
-            cancel: 'Cancelar',
-          }"
-          @onCancel="productDetailDialog = false"
-          @onAccept="onUpdate"
-        ></ProductDetail>
-      </v-col>
-    </v-row>
+    <ProductDetail
+      :product="productDetailId"
+      mode="update"
+      :text="{
+        title: 'Modificar un producto',
+        confirm: 'Confirmar',
+        cancel: 'Cancelar',
+      }"
+      @onCancel="productDetailDialog = false"
+      @onAccept="updateProduct"
+    ></ProductDetail>
   </v-dialog>
 
   <v-row>
@@ -92,7 +104,7 @@ function onUpdate(obj) {
     </v-col>
     <v-spacer></v-spacer>
     <v-col>
-      <v-btn icon>
+      <v-btn @click="createProductDialog = true" icon>
         <v-icon>mdi-plus</v-icon>
         <v-tooltip activator="parent" location="top">Nuevo producto</v-tooltip>
       </v-btn>

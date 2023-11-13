@@ -62,7 +62,7 @@ export function deepEquals(obj1, obj2) {
 
 export const fieldRules = {
   required: (value) => !!value || "Campo requerido",
-  boundCheck: (value) => value >= 1 || "Número fuera de rango",
+  boundCheck: (value) => value > 0 || "Número fuera de rango",
   lengthCheckName: (value) =>
     value.length <= 80 || "Entrada excede tamaño del campo",
   lengthCheckUnit: (value) =>

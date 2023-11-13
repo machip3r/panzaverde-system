@@ -53,10 +53,7 @@ function openProductDetail(_, data) {
   <v-dialog v-model="openDialog" min-width="450px" max-width="30%">
     <v-row>
       <v-col>
-        <ProductDetail
-          :product="productDetail"
-          :readonly="true"
-        ></ProductDetail>
+        <ProductDetail :product="productDetail" mode="read"></ProductDetail>
       </v-col>
     </v-row>
   </v-dialog>
