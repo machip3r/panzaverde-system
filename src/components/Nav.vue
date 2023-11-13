@@ -27,6 +27,7 @@
         <v-list-item to="/route" title="Rutas" value="route"></v-list-item>
         <v-list-item to="/subscription" title="Suscripciones" value="subscription"></v-list-item>
         <v-list-item to="/plan`" title="Planes" value="plan`"></v-list-item>
+        <v-list-item to="/statistics" title="Estadísticas" value="statistics"></v-list-item>
         <!-- <v-list-item to="/plan" title="Planes" value="plan"></v-list-item> -->
         <!-- <v-list-item to="/inventory" title="Inventario" value="inventory"></v-list-item>
         <v-list-item to="/user" title="Usuarios" value="user"></v-list-item> -->
