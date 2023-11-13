@@ -26,6 +26,11 @@ function openProductDetail(id) {
 }
 
 getProducts(itemsPerPage.value, 0);
+
+function onUpdate(obj) {
+  productDetailDialog.value = false;
+  console.log("Object from child: ", obj[0]);
+}
 </script>
 
 <template>
@@ -40,6 +45,7 @@ getProducts(itemsPerPage.value, 0);
             confirm: 'Aplicar cambios',
             cancel: 'Cancelar',
           }"
+          @onCancel="productDetailDialog = false"
         ></ProductDetail>
       </v-col>
     </v-row>

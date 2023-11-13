@@ -10,6 +10,9 @@ const props = defineProps({
   readonly: Boolean,
   text: Object,
 });
+
+const emit = defineEmits(["onCancel"]);
+
 const product = ref({});
 const editable = ref({});
 const confirmDialog = ref(false);
@@ -32,6 +35,7 @@ async function updateProduct() {
     confirmDialog.value = false;
 
     deepCopy(editable.value, product.value);
+    onCancel();
   } else {
     // Mostrar un tipo de alerta
     console.log("Error al actualizar");
@@ -40,6 +44,10 @@ async function updateProduct() {
 
 function atInput() {
   disablePositiveAction.value = deepEquals(product.value, editable.value);
+}
+
+function onCancel() {
+  emit("onCancel", [editable.value]);
 }
 
 getProduct(props.product.id_product);
@@ -240,7 +248,7 @@ getProduct(props.product.id_product);
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn @click="confirmDialog">{{ text.cancel }}</v-btn>
+      <v-btn @click="onCancel">{{ text.cancel }}</v-btn>
       <v-btn :disabled="disablePositiveAction" @click="confirmDialog = true">
         {{ text.confirm }}
       </v-btn>
