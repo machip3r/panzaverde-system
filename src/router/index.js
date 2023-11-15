@@ -1,7 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import { Default } from "@/layouts/default";
-import { Home, Meal, Client, Route, Subscription, Plan, Statistics, Inventory, User } from "@/views";
+import {
+  Home,
+  Meal,
+  Client,
+  Route,
+  Subscription,
+  Plan,
+  Statistics,
+  Inventory,
+  User,
+} from "@/views";
 
 const router = createRouter({
   history: createWebHistory(),

@@ -8,3 +8,6 @@ export { default as AddPlanDialogContent } from "./AddPlanDialogContent.vue";
 export { default as RemoveClientDialogContent } from "./RemoveClientDialogContent.vue";
 export { default as RemoveRouteDialogContent } from "./RemoveRouteDialogContent.vue";
 export { default as RemoveSubscriptionDialogContent } from "./RemoveSubscriptionDialogContent.vue";
+
+// Statistics
+export { default as AccountStatus } from "./statistics/AccountStatus.vue";
