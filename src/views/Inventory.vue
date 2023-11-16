@@ -11,23 +11,43 @@ const productDetailDialog = ref(false);
 const createProductDialog = ref(false);
 const productDetailId = ref({ id_product: 1 });
 
+const showAlert = ref(false);
+const alertInfo = ref({
+  color: "warning",
+  icon: "$info",
+  title: "Placeholder title",
+  text: "Placeholder text",
+});
+
 let inventory = ref([]);
 let itemsPerPage = ref(10);
-
-async function getProducts(elementsPerPage, page) {
-  inventory.value = (
-    await axios.get(`products/${elementsPerPage}/${page}`)
-  ).data;
-
-  itemsPerPage.value = inventory.value.n_products;
-}
 
 function openProductDetail(id) {
   productDetailId.value = { id_product: id };
   productDetailDialog.value = true;
 }
 
-getProducts(itemsPerPage.value, 0);
+function showAlertTimeout(color, icon, title, text) {
+  alertInfo.value = {
+    color: color,
+    icon: icon,
+    title: title,
+    text: text,
+  };
+  showAlert.value = true;
+
+  setTimeout(() => {
+    showAlert.value = false;
+  }, 2000);
+}
+
+async function getProducts(elementsPerPage, page) {
+  inventory.value = (
+    await axios.get(`products/${elementsPerPage}/${page}`)
+  ).data;
+
+  itemsPerPage.value = inventory.value.total_products;
+}
 
 function updateProduct(obj) {
   axios
@@ -36,7 +56,13 @@ function updateProduct(obj) {
       // Mostrar alerta de modificación
       productDetailDialog.value = false;
 
-      getProducts(itemsPerPage.value, inventory.page);
+      getProducts(itemsPerPage.value, inventory.value.page);
+      showAlertTimeout(
+        "success",
+        "$success",
+        "Producto actualizado",
+        "El producto se ha actualizado correctamente"
+      );
     })
     .catch((err) => {
       // Mostrar alerta de error
@@ -51,22 +77,46 @@ function createProduct(obj) {
   axios
     .post(`/products/`, obj[0])
     .then((res) => {
-      // Mostrar alerta de modificación
       createProductDialog.value = false;
 
-      getProducts(itemsPerPage.value, inventory.page);
+      getProducts(itemsPerPage.value, inventory.value.page);
+      showAlertTimeout(
+        "success",
+        "$success",
+        "Producto añadido",
+        "El producto se ha creado correctamente"
+      );
     })
     .catch((err) => {
+      const msg = err.response.data.message.sqlMessage;
       // Mostrar alerta de error
-      console.log(
-        "Error al crear producto: ",
-        err.response.data.message.sqlMessage
+      console.log("Error al crear producto: ", msg);
+      showAlertTimeout(
+        "error",
+        "$error",
+        "Error al crear producto",
+        `Ha habido un error al crear el producto: ${msg}`
       );
     });
 }
+
+getProducts(itemsPerPage.value, 0);
 </script>
 
 <template>
+  <v-slide-y-transition>
+    <v-alert
+      :model-value="showAlert"
+      :color="alertInfo.color"
+      :icon="alertInfo.icon"
+      :title="alertInfo.title"
+      :text="alertInfo.text"
+      transition="slide-y-transition"
+      density="compact"
+    >
+    </v-alert>
+  </v-slide-y-transition>
+
   <v-dialog v-model="createProductDialog" min-width="600px" max-width="30%">
     <ProductDetail
       mode="create"
@@ -141,7 +191,7 @@ function createProduct(obj) {
     <v-row v-if="inventory">
       <v-virtual-scroll
         :items="inventory.products"
-        :max-height="getScrollHeight(60)"
+        :max-height="getScrollHeight(52)"
         item-height="56px"
       >
         <template v-slot:default="{ item }">
@@ -199,7 +249,7 @@ function createProduct(obj) {
         </p>
         <p>de</p>
         <p class="mx-2">
-          <b>{{ inventory.n_pages }}</b>
+          <b>{{ inventory.total_pages }}</b>
         </p>
       </div>
 
@@ -230,7 +280,7 @@ function createProduct(obj) {
         </v-btn>
         <v-btn
           class="mx-2"
-          :disabled="inventory.page >= inventory.n_pages - 1"
+          :disabled="inventory.page >= inventory.total_pages - 1"
           flat
           size="small"
           icon
@@ -243,18 +293,28 @@ function createProduct(obj) {
         </v-btn>
         <v-btn
           class="mx-2"
-          :disabled="inventory.page === inventory.n_pages - 1"
+          :disabled="inventory.page === inventory.total_pages - 1"
           flat
           size="small"
           icon
-          @click="getProducts(itemsPerPage, inventory.n_pages - 1)"
+          @click="getProducts(itemsPerPage, inventory.total_pages - 1)"
         >
           <v-icon>mdi-skip-next</v-icon>
           <v-tooltip activator="parent" location="top">
-            Avanzar a página {{ inventory.n_pages }}
+            Avanzar a página {{ inventory.total_pages }}
           </v-tooltip>
         </v-btn>
       </div>
     </v-col>
   </v-row>
 </template>
+
+<style scoped>
+.v-alert {
+  position: fixed;
+  left: 50%;
+  bottom: 50px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+}
+</style>
