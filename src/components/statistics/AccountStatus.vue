@@ -1,63 +1,51 @@
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, inject, onMounted } from "vue";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Pie } from "vue-chartjs";
+ChartJS.register(ArcElement, Tooltip, Legend);
 
-const API_URL = `https://api.github.com/repos/vuejs/core/commits?per_page=3&sha=`
-const branches = ['main', 'v2-compat']
+import axios from "axios";
 
-const currentBranch = ref(branches[0])
-const commits = ref(null)
+const loaded = ref(false);
+const apiData = [];
 
-watchEffect(async () => {
-  // this effect will run immediately and then
-  // re-run whenever currentBranch.value changes
-  const url = `${API_URL}${currentBranch.value}`
-  commits.value = await (await fetch(url)).json()
-})
+const chartData = ref({
+  labels: ["Cuentas activas", "Cuentas inactivas", "Cuentas pendientes"],
+  datasets: [
+    {
+      data: [40, 20, 12],
+      backgroundColor: ["green", "red", "orange"],
+    },
+  ],
+});
 
-function truncate(v) {
-  const newline = v.indexOf('\n')
-  return newline > 0 ? v.slice(0, newline) : v
-}
+const chartOptions = ref({
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top",
+    },
+    title: {
+      display: true,
+      text: "Cantidad de cuentas por estado",
+    },
+  },
+});
 
-function formatDate(v) {
-  return v.replace(/T|Z/g, ' ')
-}
+onMounted(async () => {
+  apiData.value = (await axios.get("/statistics/clients/status-accounts")).data;
+  chartData.value.datasets[0].data = apiData.value.map(
+    (item) => item.c_clients,
+  );
+  loaded.value = true;
+});
 </script>
 
 <template>
-  <h1>Latest Vue Core Commits</h1>
-  <template v-for="branch in branches">
-    <input type="radio"
-      :id="branch"
-      :value="branch"
-      name="branch"
-      v-model="currentBranch">
-    <label :for="branch">{{ branch }}</label>
-  </template>
-  <p>vuejs/vue@{{ currentBranch }}</p>
-  <ul>
-    <li v-for="{ html_url, sha, author, commit } in commits">
-      <a :href="html_url" target="_blank" class="commit">{{ sha.slice(0, 7) }}</a>
-      - <span class="message">{{ truncate(commit.message) }}</span><br>
-      by <span class="author">
-        <a :href="author.html_url" target="_blank">{{ commit.author.name }}</a>
-      </span>
-      at <span class="date">{{ formatDate(commit.author.date) }}</span>
-    </li>
-  </ul>
+  <Pie
+    v-if="loaded"
+    id="status-accounts"
+    :options="chartOptions"
+    :data="chartData"
+  />
 </template>
-
-<style>
-a {
-  text-decoration: none;
-  color: #42b883;
-}
-li {
-  line-height: 1.5em;
-  margin-bottom: 20px;
-}
-.author,
-.date {
-  font-weight: bold;
-}
-</style>

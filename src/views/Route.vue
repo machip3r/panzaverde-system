@@ -13,7 +13,11 @@ import { AddRouteDialogContent, RemoveRouteDialogContent } from "../components";
       <template v-slot:[`item.actions`]="{ item }">
         <v-row align="center" align-content="center">
           <v-col cols="3">
-            <v-btn color="error" size="large" @click="openRemoveRouteDialog(item)">
+            <v-btn
+              color="error"
+              size="large"
+              @click="openRemoveRouteDialog(item)"
+            >
               Eliminar
             </v-btn>
           </v-col>
@@ -22,12 +26,26 @@ import { AddRouteDialogContent, RemoveRouteDialogContent } from "../components";
     </v-data-table>
   </v-card>
 
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="addRouteDialog">
-    <AddRouteDialogContent :actualRoute="this.actualRoute" :closeFunction="closeAddRouteDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="addRouteDialog"
+  >
+    <AddRouteDialogContent
+      :actualRoute="this.actualRoute"
+      :closeFunction="closeAddRouteDialog"
+    />
   </v-dialog>
 
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="removeRouteDialog">
-    <RemoveRouteDialogContent :actualRoute="this.actualRoute" :closeFunction="closeRemoveRouteDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="removeRouteDialog"
+  >
+    <RemoveRouteDialogContent
+      :actualRoute="this.actualRoute"
+      :closeFunction="closeRemoveRouteDialog"
+    />
   </v-dialog>
 </template>
 
@@ -38,7 +56,7 @@ export default {
   components: {
     AddRouteDialogContent,
 
-    RemoveRouteDialogContent
+    RemoveRouteDialogContent,
   },
 
   data: () => ({
