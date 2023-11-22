@@ -1,9 +1,17 @@
 <script setup>
-import { AccountStatus, ClientInfo, SubscriptionsInfo } from "../components";
+import { AccountStatus, ClientInfo, SalesInfo } from "../components";
 </script>
 
 <template>
-  <AccountStatus style="max-height: 400px" />
-  <ClientInfo id-client=5 />
-  <SubscriptionsInfo start-date="2023-01-01" end-date="2023-11-16" />
+  <v-container>
+    <v-row no-gutters justify="space-around">
+      <v-col cols="5">
+        <AccountStatus />
+      </v-col>
+      <v-col cols="6">
+        <ClientInfo id-client="5" />
+        <SalesInfo start-date="2021-01-01" end-date="2023-03-03" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>

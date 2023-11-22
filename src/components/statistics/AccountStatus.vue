@@ -1,11 +1,11 @@
 <script setup>
-import { ref, watchEffect, inject, onMounted } from "vue";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { ref, onMounted } from "vue";
+import { Chart as ChartJS, ArcElement, Tooltip, Title, Legend } from "chart.js";
 import { Pie } from "vue-chartjs";
-ChartJS.register(ArcElement, Tooltip, Legend);
 
 import axios from "axios";
 
+ChartJS.register(ArcElement, Tooltip, Title, Legend);
 const loaded = ref(false);
 const apiData = [];
 
@@ -42,10 +42,14 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Pie
-    v-if="loaded"
-    id="status-accounts"
-    :options="chartOptions"
-    :data="chartData"
-  />
+  <v-card v-if="loaded">
+    <v-card-text>
+      <Pie
+        v-if="loaded"
+        id="status-accounts"
+        :options="chartOptions"
+        :data="chartData"
+      />
+    </v-card-text>
+  </v-card>
 </template>
