@@ -46,6 +46,8 @@ async function getProducts(elementsPerPage, page) {
     await axios.get(`products/${elementsPerPage}/${page}`)
   ).data;
 
+  console.log(inventory);
+
   itemsPerPage.value = inventory.value.total_products;
 }
 
@@ -101,6 +103,8 @@ function createProduct(obj) {
 }
 
 getProducts(itemsPerPage.value, 0);
+
+console.log(inventory);
 </script>
 
 <template>

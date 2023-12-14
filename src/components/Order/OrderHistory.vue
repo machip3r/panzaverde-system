@@ -8,7 +8,7 @@ import axios from "axios";
 
 import { VDatePicker } from "vuetify/labs/VDatePicker";
 import { VMenu } from "vuetify/lib/components/index.mjs";
-import { OrderDetail } from "@/components";
+import { OrderDetail, PagedAPITable } from "@/components";
 
 import { parseTimestamp, getScrollHeight } from "@/utils/order.utils";
 
@@ -60,14 +60,52 @@ async function getOrderDetails(id) {
 }
 
 getOrders();
+
+const newOrderDialog = ref(true);
+function openNewOrderDialog() {
+  newOrderDialog.value = true;
+}
 </script>
 
 <template>
+  <v-row>
+    <v-dialog
+      v-model="newOrderDialog"
+      fullscreen
+      transition="dialog-bottom-transition"
+    >
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="newOrderDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>Crear una orden</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items> </v-toolbar-items>
+        </v-toolbar>
+        <v-card-item>
+          <v-row>
+            <v-col>
+              <PagedAPITable />
+            </v-col>
+            <v-col><h1>sida</h1></v-col>
+          </v-row>
+        </v-card-item>
+      </v-card>
+    </v-dialog>
+  </v-row>
+
   <v-row v-if="orders.length > 1">
     <v-col>
       <v-row>
         <v-col>
           <h2 class="mt-5">Historial de pedidos</h2>
+        </v-col>
+        <v-col>
+          <v-btn icon @click="openNewOrderDialog">
+            <v-icon>mdi-plus</v-icon>
+            <v-tooltip activator="parent" location="top">Crear orden</v-tooltip>
+          </v-btn>
         </v-col>
       </v-row>
 
