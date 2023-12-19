@@ -25,10 +25,6 @@ const chartOptions = ref({
     legend: {
       position: "top",
     },
-    title: {
-      display: true,
-      text: "Cantidad de cuentas por estado",
-    },
   },
 });
 
@@ -43,6 +39,7 @@ onMounted(async () => {
 
 <template>
   <v-card v-if="loaded">
+    <v-card-title class="text-center">Estado de las cuentas</v-card-title>
     <v-card-text>
       <Pie
         v-if="loaded"

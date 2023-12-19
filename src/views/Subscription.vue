@@ -1,7 +1,8 @@
 <script setup>
-import { VDataTable } from "vuetify/labs/VDataTable";
-
-import { AddSubscriptionDialogContent, RemoveSubscriptionDialogContent } from "../components";
+import {
+  AddSubscriptionDialogContent,
+  RemoveSubscriptionDialogContent,
+} from "../components";
 </script>
 
 <template>
@@ -10,18 +11,35 @@ import { AddSubscriptionDialogContent, RemoveSubscriptionDialogContent } from ".
 
   <v-card>
     <v-card-title>
-      <v-text-field v-model="searchSubscriptions" label="Buscar suscripciones" single-line hide-details></v-text-field>
+      <v-text-field
+        v-model="searchSubscriptions"
+        label="Buscar suscripciones"
+        single-line
+        hide-details
+      ></v-text-field>
     </v-card-title>
-    <v-data-table :headers="headersSubscriptions" :items="subscriptions" :search="searchSubscriptions">
+    <v-data-table
+      :headers="headersSubscriptions"
+      :items="subscriptions"
+      :search="searchSubscriptions"
+    >
       <template v-slot:[`item.actions`]="{ item }">
         <v-row align="center" align-content="center">
           <v-col cols="3">
-            <v-btn color="secondary" size="large" @click="openAddSubscriptionDialog(item)">
+            <v-btn
+              color="secondary"
+              size="large"
+              @click="openAddSubscriptionDialog(item)"
+            >
               Editar
             </v-btn>
           </v-col>
           <v-col cols="3">
-            <v-btn color="error" size="large" @click="openRemoveSubscriptionDialog(item)">
+            <v-btn
+              color="error"
+              size="large"
+              @click="openRemoveSubscriptionDialog(item)"
+            >
               Eliminar
             </v-btn>
           </v-col>
@@ -30,14 +48,26 @@ import { AddSubscriptionDialogContent, RemoveSubscriptionDialogContent } from ".
     </v-data-table>
   </v-card>
 
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="addSubscriptionDialog">
-    <AddSubscriptionDialogContent :actualSubscription="this.actualSubscription"
-      :closeFunction="closeAddSubscriptionDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="addSubscriptionDialog"
+  >
+    <AddSubscriptionDialogContent
+      :actualSubscription="this.actualSubscription"
+      :closeFunction="closeAddSubscriptionDialog"
+    />
   </v-dialog>
 
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="removeSubscriptionDialog">
-    <RemoveSubscriptionDialogContent :actualSubscription="this.actualSubscription"
-      :closeFunction="closeRemoveSubscriptionDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="removeSubscriptionDialog"
+  >
+    <RemoveSubscriptionDialogContent
+      :actualSubscription="this.actualSubscription"
+      :closeFunction="closeRemoveSubscriptionDialog"
+    />
   </v-dialog>
 </template>
 

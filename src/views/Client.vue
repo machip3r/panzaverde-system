@@ -1,7 +1,8 @@
 <script setup>
-import { VDataTable } from "vuetify/labs/VDataTable";
-
-import { AddClientDialogContent, RemoveClientDialogContent } from "../components";
+import {
+  AddClientDialogContent,
+  RemoveClientDialogContent,
+} from "../components";
 </script>
 
 <template>
@@ -10,18 +11,35 @@ import { AddClientDialogContent, RemoveClientDialogContent } from "../components
 
   <v-card>
     <v-card-title>
-      <v-text-field v-model="searchClients" label="Buscar clientes" single-line hide-details></v-text-field>
+      <v-text-field
+        v-model="searchClients"
+        label="Buscar clientes"
+        single-line
+        hide-details
+      ></v-text-field>
     </v-card-title>
-    <v-data-table :headers="headersClients" :items="clients" :search="searchClients">
+    <v-data-table
+      :headers="headersClients"
+      :items="clients"
+      :search="searchClients"
+    >
       <template v-slot:[`item.actions`]="{ item }">
         <v-row align="center" align-content="center">
           <v-col cols="3">
-            <v-btn color="secondary" size="large" @click="openAddClientDialog(item)">
+            <v-btn
+              color="secondary"
+              size="large"
+              @click="openAddClientDialog(item)"
+            >
               Editar
             </v-btn>
           </v-col>
           <v-col cols="3">
-            <v-btn color="error" size="large" @click="openRemoveClientDialog(item)">
+            <v-btn
+              color="error"
+              size="large"
+              @click="openRemoveClientDialog(item)"
+            >
               Eliminar
             </v-btn>
           </v-col>
@@ -30,12 +48,26 @@ import { AddClientDialogContent, RemoveClientDialogContent } from "../components
     </v-data-table>
   </v-card>
 
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="addClientDialog">
-    <AddClientDialogContent :actualClient="this.actualClient" :closeFunction="closeAddClientDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="addClientDialog"
+  >
+    <AddClientDialogContent
+      :actualClient="this.actualClient"
+      :closeFunction="closeAddClientDialog"
+    />
   </v-dialog>
 
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="removeClientDialog">
-    <RemoveClientDialogContent :actualClient="this.actualClient" :closeFunction="closeRemoveClientDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="removeClientDialog"
+  >
+    <RemoveClientDialogContent
+      :actualClient="this.actualClient"
+      :closeFunction="closeRemoveClientDialog"
+    />
   </v-dialog>
 </template>
 
@@ -111,5 +143,5 @@ export default {
       this.routes = apiData.data;
     },
   },
-}
+};
 </script>

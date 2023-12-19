@@ -12,4 +12,7 @@ export { default as RemoveSubscriptionDialogContent } from "./RemoveSubscription
 // Statistics
 export { default as AccountStatus } from "./statistics/AccountStatus.vue";
 export { default as ClientInfo } from "./statistics/ClientInfo.vue";
-export { default as SalesInfo } from "./statistics/SalesInfo.vue";
+export { default as SocialNetworksSales } from "./statistics/SocialNetworksSales.vue";
+export { default as YearlySales } from "./statistics/YearlySales.vue";
+export { default as MonthlySales } from "./statistics/MonthlySales.vue";
+export { default as DailySales } from "./statistics/DailySales.vue";

@@ -1,6 +1,4 @@
-<script setup>
-import { VDataTable } from "vuetify/labs/VDataTable";
-</script>
+<script setup></script>
 
 <template>
   <h1>Usuarios</h1>

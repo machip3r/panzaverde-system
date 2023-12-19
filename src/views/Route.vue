@@ -1,6 +1,4 @@
 <script setup>
-import { VDataTable } from "vuetify/labs/VDataTable";
-
 import { AddRouteDialogContent, RemoveRouteDialogContent } from "../components";
 </script>
 

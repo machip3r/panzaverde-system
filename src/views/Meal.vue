@@ -1,7 +1,13 @@
 <script setup>
-import { VDataTable } from "vuetify/labs/VDataTable";
-
-import { AddClientDialogContent, AddRouteDialogContent, AddSubscriptionDialogContent, AddPlanDialogContent, RemoveClientDialogContent, RemoveRouteDialogContent, RemoveSubscriptionDialogContent } from "../components";
+import {
+  AddClientDialogContent,
+  AddRouteDialogContent,
+  AddSubscriptionDialogContent,
+  AddPlanDialogContent,
+  RemoveClientDialogContent,
+  RemoveRouteDialogContent,
+  RemoveSubscriptionDialogContent,
+} from "../components";
 </script>
 
 <template>
@@ -13,10 +19,20 @@ import { AddClientDialogContent, AddRouteDialogContent, AddSubscriptionDialogCon
 
   <v-card>
     <v-card-title>
-      <v-text-field v-model="searchMeals" label="Buscar comidas" single-line hide-details></v-text-field>
+      <v-text-field
+        v-model="searchMeals"
+        label="Buscar comidas"
+        single-line
+        hide-details
+      ></v-text-field>
     </v-card-title>
     <!-- <v-data-table :headers="headersMeals" :items="meals" :search="searchMeals" v-model:expanded="expanded"> -->
-    <v-data-table class="table-meal" :headers="headersMeals" :items="meals" :search="searchMeals">
+    <v-data-table
+      class="table-meal"
+      :headers="headersMeals"
+      :items="meals"
+      :search="searchMeals"
+    >
       <!-- <template v-slot:header="{ props: { headersMeals } }">
         <thead>
           <tr>
@@ -66,18 +82,36 @@ import { AddClientDialogContent, AddRouteDialogContent, AddSubscriptionDialogCon
                 <td colspan="3">Especial</td>
               </tr>
               <tr>
-                <td v-for="(header) of headersMealsPlanQuantity">
-                  <table class="table-quantity" v-if="getDayMeal(header.key, props.item.raw['id_subscription']) !== ''">
+                <td v-for="header of headersMealsPlanQuantity">
+                  <table
+                    class="table-quantity"
+                    v-if="
+                      getDayMeal(
+                        header.key,
+                        props.item.raw['id_subscription'],
+                      ) !== ''
+                    "
+                  >
                     <tr class="type">
                       <td>
-                        {{ ((header.title[header.title.length - 3] + header.title[header.title.length - 2]) !== "CN") ?
-                          header.title[header.title.length - 2] :
-                          header.title[header.title.length - 3] + header.title[header.title.length - 2] }}
+                        {{
+                          header.title[header.title.length - 3] +
+                            header.title[header.title.length - 2] !==
+                          "CN"
+                            ? header.title[header.title.length - 2]
+                            : header.title[header.title.length - 3] +
+                              header.title[header.title.length - 2]
+                        }}
                       </td>
                     </tr>
                     <tr>
                       <td>
-                        {{ getDayMeal(header.key, props.item.raw['id_subscription']) }}
+                        {{
+                          getDayMeal(
+                            header.key,
+                            props.item.raw["id_subscription"],
+                          )
+                        }}
                       </td>
                     </tr>
                   </table>
@@ -102,29 +136,73 @@ import { AddClientDialogContent, AddRouteDialogContent, AddSubscriptionDialogCon
     <v-data-table :headers="headersRoutes" :items="routes" :search="searchRoutes"></v-data-table>
   </v-card> -->
 
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="addClientDialog">
-    <AddClientDialogContent :actualClient="this.actualClient" :closeFunction="closeAddClientDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="addClientDialog"
+  >
+    <AddClientDialogContent
+      :actualClient="this.actualClient"
+      :closeFunction="closeAddClientDialog"
+    />
   </v-dialog>
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="addRouteDialog">
-    <AddRouteDialogContent :actualRoute="this.actualRoute" :closeFunction="closeAddRouteDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="addRouteDialog"
+  >
+    <AddRouteDialogContent
+      :actualRoute="this.actualRoute"
+      :closeFunction="closeAddRouteDialog"
+    />
   </v-dialog>
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="addSubscriptionDialog">
-    <AddSubscriptionDialogContent :actualSubscription="this.actualSubscription"
-      :closeFunction="closeAddSubscriptionDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="addSubscriptionDialog"
+  >
+    <AddSubscriptionDialogContent
+      :actualSubscription="this.actualSubscription"
+      :closeFunction="closeAddSubscriptionDialog"
+    />
   </v-dialog>
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="addPlanDialog">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="addPlanDialog"
+  >
     <AddPlanDialogContent :closeFunction="closeAddPlanDialog" />
   </v-dialog>
 
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="removeClientDialog">
-    <RemoveClientDialogContent :actualClient="this.actualClient" :closeFunction="closeRemoveClientDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="removeClientDialog"
+  >
+    <RemoveClientDialogContent
+      :actualClient="this.actualClient"
+      :closeFunction="closeRemoveClientDialog"
+    />
   </v-dialog>
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="removeRouteDialog">
-    <RemoveRouteDialogContent :actualRoute="this.actualRoute" :closeFunction="closeRemoveRouteDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="removeRouteDialog"
+  >
+    <RemoveRouteDialogContent
+      :actualRoute="this.actualRoute"
+      :closeFunction="closeRemoveRouteDialog"
+    />
   </v-dialog>
-  <v-dialog transition="dialog-bottom-transition" width="400px" v-model="removeSubscriptionDialog">
-    <RemoveSubscriptionDialogContent :actualSubscription="this.actualSubscription"
-      :closeFunction="closeRemoveSubscriptionDialog" />
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400px"
+    v-model="removeSubscriptionDialog"
+  >
+    <RemoveSubscriptionDialogContent
+      :actualSubscription="this.actualSubscription"
+      :closeFunction="closeRemoveSubscriptionDialog"
+    />
   </v-dialog>
   <!-- <v-dialog transition="dialog-bottom-transition" width="400px" v-model="removePlanDialog">
     <RemovePlanDialogContent :closeFunction="closeRemovePlanDialog" />
@@ -358,12 +436,18 @@ export default {
       let plans = [];
 
       for (const meal of dataMeals) {
-        const apiDataPlans = await this.axios.get("meal/plan/" + meal.id_subscription);
+        const apiDataPlans = await this.axios.get(
+          "meal/plan/" + meal.id_subscription,
+        );
         let dictionaryPlan = {};
 
         for (const plan of apiDataPlans.data) {
-          dictionaryPlan[ "id_subscription" ] = plan.id_subscription;
-          dictionaryPlan[ this.removeAccents(plan.d_name.toLowerCase()) + plan.t_name.toLowerCase() + plan.mt_name.toLowerCase() ] = plan.p_quantity;
+          dictionaryPlan["id_subscription"] = plan.id_subscription;
+          dictionaryPlan[
+            this.removeAccents(plan.d_name.toLowerCase()) +
+              plan.t_name.toLowerCase() +
+              plan.mt_name.toLowerCase()
+          ] = plan.p_quantity;
         }
 
         plans.push(dictionaryPlan);
@@ -398,10 +482,12 @@ export default {
     },
 
     getDayMeal(key, id_subscription) {
-      const plan = this.plans.filter((p) => p.id_subscription === id_subscription);
+      const plan = this.plans.filter(
+        (p) => p.id_subscription === id_subscription,
+      );
 
-      return (typeof plan[ 0 ][ key ] !== "undefined") ? plan[ 0 ][ key ] : "";
-    }
+      return typeof plan[0][key] !== "undefined" ? plan[0][key] : "";
+    },
   },
 };
 </script>
